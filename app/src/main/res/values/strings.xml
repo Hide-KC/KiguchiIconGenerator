@@ -1,3 +1,28 @@
 <resources>
     <string name="app_name">KiguchiIconGenerator</string>
+    <string name="subtitle">テスト</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="flaticon_copyrights">Designed by Freepik and distributed by Flaticon</string>
+    
+    <string-array name="parts_names">
+        <item>前髪</item>
+        <item>後髪</item>
+        <item>目</item>
+        <item>口</item>
+        <item>体</item>
+        <item>コメント</item>
+        <item>アクセサリ</item>
+        <item>アイテム</item>
+        <item>背景</item>
+    </string-array>
+
+    <string name="test_comment">ずいずいずいずいずいずい\nずいずいずいずいずいずい</string>
+
 </resources>
