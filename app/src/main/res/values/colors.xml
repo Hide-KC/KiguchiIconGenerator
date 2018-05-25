@@ -5,4 +5,17 @@
     <color name="colorAccent">#FF4081</color>
     <color name="icon_gray">#363636</color>
 
+    <color name="list_back">#10000000</color>
+
+    //テスト
+    <color name="yellow">#f6ff00</color>
+    <color name="blue">#0c00ff</color>
+    <color name="green">#00ff00</color>
+
+    //テスト配色
+    <color name="pale_orange">#fffce2c4</color>
+    <color name="black">#ff524e4d</color>
+    <color name="pink">#ffdf7163</color>
+
+
 </resources>

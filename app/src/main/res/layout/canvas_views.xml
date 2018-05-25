@@ -6,35 +6,116 @@
     android:layout_width="wrap_content"
     android:layout_height="match_parent">
 
+
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/rinkaku_layer"
+        android:id="@+id/back_hair_layer"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="48dp"
-        android:layout_marginEnd="48dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="48dp"
-        android:background="@color/invert_background"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <!--<android.support.constraint.ConstraintLayout-->
+        <!--android:id="@+id/rinkaku_layer"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_marginEnd="8dp"-->
+        <!--android:layout_marginStart="8dp"-->
+        <!--android:background="@color/invert_background"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintDimensionRatio="h,1:1"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent">-->
+
         <ImageView
-            android:id="@+id/rinkaku"
+            android:id="@+id/hair_b_line"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            app:layout_constraintEnd_toStartOf="@+id/hair_b_line_right"
+            app:layout_constraintStart_toStartOf="@+id/hair_b_line_left"
+            app:layout_constraintTop_toTopOf="@+id/hair_b_line_top"
+            app:srcCompat="@drawable/ic_backhair_1_line" />
+
+        <ImageView
+            android:id="@+id/hair_b_back"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            app:layout_constraintEnd_toStartOf="@+id/hair_b_line_right"
+            app:layout_constraintStart_toStartOf="@+id/hair_b_line_left"
+            app:layout_constraintTop_toTopOf="@+id/hair_b_line_top"
+            app:srcCompat="@drawable/ic_backhair_1_color" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/hair_b_line_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.0" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/hair_b_line_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.0" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/hair_b_line_right"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:src="@mipmap/rinkaku_no_parts_transparent"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="1.0" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/rinkaku_layer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@color/invert_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/rinkaku_line"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="w,1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_body_1_line"/>
+
+        <ImageView
+            android:id="@+id/rinkaku_back"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="w,1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_body_1_color"/>
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/acc_layer"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -77,6 +158,7 @@
             android:id="@+id/body_layer"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -119,6 +201,7 @@
             android:id="@+id/eye_layer"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -132,33 +215,33 @@
                 app:layout_constraintEnd_toStartOf="@+id/eye_line_right"
                 app:layout_constraintStart_toStartOf="@+id/eye_line_left"
                 app:layout_constraintTop_toTopOf="@+id/eye_line_top"
-                app:srcCompat="@mipmap/eye_transparent" />
+                app:srcCompat="@drawable/ic_eye_1_line" />
 
             <android.support.constraint.Guideline
                 android:id="@+id/eye_line_top"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.35" />
+                app:layout_constraintGuide_percent="0.0" />
 
             <android.support.constraint.Guideline
                 android:id="@+id/eye_line_left"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.35" />
+                app:layout_constraintGuide_percent="0.0" />
 
             <android.support.constraint.Guideline
                 android:id="@+id/eye_line_right"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.77" />
+                app:layout_constraintGuide_percent="1.0" />
 
         </android.support.constraint.ConstraintLayout>
 
         <android.support.constraint.ConstraintLayout
-            android:id="@+id/mouse_layer"
+            android:id="@+id/mouth_layer"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -167,35 +250,45 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/mouse"
+                android:id="@+id/mouse_line"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 app:layout_constraintEnd_toStartOf="@+id/mouse_line_right"
                 app:layout_constraintStart_toEndOf="@+id/mouse_line_left"
                 app:layout_constraintTop_toTopOf="@+id/mouse_line_top"
-                app:srcCompat="@mipmap/mouse_transparent" />
+                app:srcCompat="@drawable/ic_mouth_1_line" />
+
+            <ImageView
+                android:id="@+id/mouse_back"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                app:layout_constraintEnd_toStartOf="@+id/mouse_line_right"
+                app:layout_constraintStart_toEndOf="@+id/mouse_line_left"
+                app:layout_constraintTop_toTopOf="@+id/mouse_line_top"
+                app:srcCompat="@drawable/ic_mouth_1_color" />
 
             <android.support.constraint.Guideline
                 android:id="@+id/mouse_line_top"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.6" />
+                app:layout_constraintGuide_percent="0.0" />
 
             <android.support.constraint.Guideline
                 android:id="@+id/mouse_line_left"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.4" />
+                app:layout_constraintGuide_percent="0.0" />
 
             <android.support.constraint.Guideline
                 android:id="@+id/mouse_line_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.65" />
+                app:layout_constraintGuide_percent="1.0" />
         </android.support.constraint.ConstraintLayout>
 
 
@@ -203,90 +296,62 @@
             android:id="@+id/hair_f_layer"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/hair_f"
+                android:id="@+id/hair_f_line"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 app:layout_constraintEnd_toStartOf="@+id/hair_f_line_right"
                 app:layout_constraintStart_toStartOf="@+id/hair_f_line_left"
                 app:layout_constraintTop_toTopOf="@+id/hair_f_line_top"
-                app:srcCompat="@mipmap/mouse_transparent" />
+                app:srcCompat="@drawable/ic_bang_1_line" />
+
+            <ImageView
+                android:id="@+id/hair_f_back"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                app:layout_constraintEnd_toStartOf="@+id/hair_f_line_right"
+                app:layout_constraintStart_toStartOf="@+id/hair_f_line_left"
+                app:layout_constraintTop_toTopOf="@+id/hair_f_line_top"
+                app:srcCompat="@drawable/ic_bang_1_color" />
 
             <android.support.constraint.Guideline
                 android:id="@+id/hair_f_line_top"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.17" />
+                app:layout_constraintGuide_percent="0.0" />
 
             <android.support.constraint.Guideline
                 android:id="@+id/hair_f_line_left"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.42" />
+                app:layout_constraintGuide_percent="0.0" />
 
             <android.support.constraint.Guideline
                 android:id="@+id/hair_f_line_right"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.9" />
+                app:layout_constraintGuide_percent="1.0" />
 
         </android.support.constraint.ConstraintLayout>
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/hair_b_layer"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/hair_b"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                app:layout_constraintEnd_toStartOf="@+id/hair_b_line_right"
-                app:layout_constraintStart_toStartOf="@+id/hair_b_line_left"
-                app:layout_constraintTop_toTopOf="@+id/hair_b_line_top"
-                app:srcCompat="@mipmap/mouse_transparent" />
-
-            <android.support.constraint.Guideline
-                android:id="@+id/hair_b_line_top"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.11" />
-
-            <android.support.constraint.Guideline
-                android:id="@+id/hair_b_line_left"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0" />
-
-            <android.support.constraint.Guideline
-                android:id="@+id/hair_b_line_right"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.59" />
-
-        </android.support.constraint.ConstraintLayout>
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/hair_acc_layer"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -371,6 +436,7 @@
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@mipmap/slash" />
 
             <android.support.constraint.Guideline

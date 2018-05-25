@@ -23,6 +23,18 @@
         <item>背景</item>
     </string-array>
 
+    <string-array name="layer_ids">
+        <item>hair_b_layer</item>
+        <item>body_layer</item>
+        <item>face_layer</item>
+        <item>eye_layer</item>
+        <item>mouse_layer</item>
+        <item>bang_layer</item>
+        <item>hair_acc_layer</item>
+        <item>face_acc_layer</item>
+        <item>comment_layer</item>
+    </string-array>
+
     <string name="test_comment">ずいずいずいずいずいずい\nずいずいずいずいずいずい</string>
 
 </resources>

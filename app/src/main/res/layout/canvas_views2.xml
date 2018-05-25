@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include
+            android:id="@+id/hair_b_layer"
+            layout="@layout/canvas_base"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </include>
+
+        <include
+            android:id="@+id/body_layer"
+            layout="@layout/canvas_base"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </include>
+
+        <include
+            android:id="@+id/face_layer"
+            layout="@layout/canvas_base"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </include>
+
+        <include
+            android:id="@+id/eye_layer"
+            layout="@layout/canvas_base"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </include>
+
+        <include
+            android:id="@+id/mouth_layer"
+            layout="@layout/canvas_base"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </include>
+
+        <include
+            android:id="@+id/bang_layer"
+            layout="@layout/canvas_base"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </include>
+
+        <include
+            android:id="@+id/hair_acc_layer"
+            layout="@layout/canvas_base"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </include>
+
+        <include
+            android:id="@+id/face_acc_layer"
+            layout="@layout/canvas_base"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </include>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/comment_layer"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/right_slash"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:adjustViewBounds="true"
+                android:cropToPadding="true"
+                android:scaleType="fitStart"
+                app:layout_constraintBottom_toTopOf="@+id/comment_line"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/comment"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@mipmap/slash" />
+
+            <ImageView
+                android:id="@+id/comment"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@+id/comment_line"
+                app:layout_constraintEnd_toStartOf="@+id/right_slash"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/left_slash"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/left_slash"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:adjustViewBounds="true"
+                android:cropToPadding="true"
+                android:scaleType="fitEnd"
+                android:scaleX="-1"
+                app:layout_constraintBottom_toTopOf="@+id/comment_line"
+                app:layout_constraintEnd_toStartOf="@+id/comment"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@mipmap/slash" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/comment_line"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.2" />
+
+        </android.support.constraint.ConstraintLayout>
+
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.constraint.ConstraintLayout>

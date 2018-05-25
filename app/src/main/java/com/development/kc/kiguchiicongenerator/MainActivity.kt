@@ -1,9 +1,12 @@
 package com.development.kc.kiguchiicongenerator
 
-import android.graphics.Bitmap
+import android.graphics.*
+import android.graphics.drawable.VectorDrawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.annotation.Nullable
 import android.support.constraint.ConstraintLayout
+import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
@@ -14,21 +17,50 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.ListView
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.math.roundToInt
 
 
 class MainActivity : AppCompatActivity() {
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        val rinkakuLayer = findViewById<ConstraintLayout>(R.id.rinkaku_layer)
-        val rinkakuLayerHeight = rinkakuLayer.height
-        val textSize = (rinkakuLayerHeight * 0.1).roundToInt()
-        val teststring = "ずいずい"
-        val testBitmap = BitmapGenerator.textToBitmap(this, teststring, textSize)
+        val commentLayer = findViewById<ConstraintLayout>(R.id.comment_layer)
+        val commentHeight = commentLayer.height
+        val textSize = (commentHeight * 0.1).roundToInt()
+        val teststring = "₍₍(ง˘ω˘)ว⁾⁾"
+        val testBitmap = BitmapGenerator.textToBitmap(Color.RED, teststring, textSize)
 
         val commentView = findViewById<ImageView>(R.id.comment)
         commentView.setImageBitmap(testBitmap)
+
+
+        //テストコード
+        /*ここから１セット*/
+        var backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_1_color, null)
+        var lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_1_line, null)
+        setParts(R.id.hair_b_layer, lineDrawable, R.color.green, backDrawable, R.color.yellow)
+        /*ここまで１セット*/
+
+        /*ここから１セット*/
+        backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_body_1_color, null)
+        lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_body_1_line, null)
+        setParts(R.id.body_layer, lineDrawable, null, backDrawable, R.color.pale_orange)
+        /*ここまで１セット*/
+
+        /*ここから１セット*/
+        lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_eye_1_line, null)
+        setParts(R.id.eye_layer, lineDrawable, null, null, null)
+        /*ここまで１セット*/
+
+        backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_1_color, null)
+        lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_1_line, null)
+        setParts(R.id.mouth_layer, lineDrawable, null, backDrawable, R.color.pink)
+
+        backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_bang_1_color, null)
+        lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_bang_1_line, null)
+        setParts(R.id.bang_layer, lineDrawable, R.color.green, backDrawable, R.color.yellow)
+        //テストここまで
+
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,11 +68,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        toolbar.setTitle(R.string.app_name)
-        toolbar.setSubtitle(R.string.subtitle)
+//        toolbar.setTitle(R.string.app_name)
+//        toolbar.setSubtitle(R.string.subtitle)
         toolbar.setTitleTextColor(getMyColor(android.R.color.white))
         toolbar.setSubtitleTextColor(getMyColor(android.R.color.white))
-        toolbar.setBackgroundColor(getMyColor(R.color.colorPrimaryDark))
+//        toolbar.setBackgroundColor(getMyColor(R.color.colorPrimaryDark))
 
         val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
         val toggle = object : ActionBarDrawerToggle(
@@ -73,8 +105,6 @@ class MainActivity : AppCompatActivity() {
         adapter.addAll(arr.toList())
         partsList.adapter = adapter
 
-        val iv_eye = findViewById<ImageView>(R.id.eye)
-        iv_eye.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom -> Log.d("onLayoutChange", "change") }
     }
 
     //sdk23からはgetColorが非推奨になり、ContextCompat.getColorを使うようになりました。
@@ -82,9 +112,19 @@ class MainActivity : AppCompatActivity() {
         return ContextCompat.getColor(this, id)
     }
 
-    private fun convertDpToPx(dp: Int): Int{
-        val scale = resources.displayMetrics.density
-        return (dp * scale + 0.5f).toInt()
-    }
+    private fun setParts(layerId: Int, @Nullable lineDrawable: VectorDrawableCompat?, @Nullable lineColorId: Int?, @Nullable backDrawable: VectorDrawableCompat?, @Nullable backColorId: Int?){
+        if (backColorId != null && backDrawable is VectorDrawableCompat){
+            backDrawable.setColorFilter(getMyColor(backColorId), PorterDuff.Mode.SRC_ATOP)
+        }
 
+        if (lineColorId is Int && lineDrawable is VectorDrawableCompat){
+            lineDrawable.setColorFilter(getMyColor(lineColorId), PorterDuff.Mode.SRC_ATOP)
+        }
+
+        val layer =  findViewById<ConstraintLayout>(layerId)
+        val backImg = layer.findViewById<ImageView>(R.id.base_back)
+        backImg.setImageDrawable(backDrawable)
+        val lineImg = layer.findViewById<ImageView>(R.id.base_line)
+        lineImg.setImageDrawable(lineDrawable)
+    }
 }
