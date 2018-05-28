@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">KiguchiIconGenerator</string>
+    <string name="app_name">世界木口化計画（仮）</string>
     <string name="subtitle">テスト</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -36,5 +36,6 @@
     </string-array>
 
     <string name="test_comment">ずいずいずいずいずいずい\nずいずいずいずいずいずい</string>
+
 
 </resources>

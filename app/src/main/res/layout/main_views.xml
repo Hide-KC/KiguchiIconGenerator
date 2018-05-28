@@ -23,6 +23,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="horizontal"
+        android:background="@android:color/darker_gray"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toStartOf="@+id/parts_names"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +31,7 @@
 
         <include
             android:id="@+id/include_canvas"
-            layout="@layout/canvas_views2"
+            layout="@layout/canvas_views"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginBottom="4dp"
@@ -50,10 +51,11 @@
         android:id="@+id/parts_grid"
         android:layout_width="0dp"
         android:layout_height="125dp"
-        android:numColumns="5"
         android:background="@color/list_back"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:numColumns="5"
+        app:layout_constraintBottom_toTopOf="@+id/adView"
         app:layout_constraintEnd_toStartOf="@+id/parts_names"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ListView
@@ -61,7 +63,7 @@
         android:layout_width="60dp"
         android:layout_height="0dp"
         android:background="@color/list_back"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/adView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
@@ -141,5 +143,16 @@
             app:srcCompat="@android:drawable/ic_media_play" />
 
     </android.support.constraint.ConstraintLayout>
+
+    <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        ads:adSize="SMART_BANNER"
+        ads:adUnitId="ca-app-pub-4566858215490503/1962929570"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

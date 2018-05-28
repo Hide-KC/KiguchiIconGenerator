@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "545878743706",
+    "firebase_url": "https://kiguchiicongenerator.firebaseio.com",
+    "project_id": "kiguchiicongenerator",
+    "storage_bucket": "kiguchiicongenerator.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:545878743706:android:da991fd23bef2e21",
+        "android_client_info": {
+          "package_name": "com.development.kc.kiguchiicongenerator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "545878743706-6ob1eargn0atmacg0rlj5f78f7kld9q7.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "545878743706-6ob1eargn0atmacg0rlj5f78f7kld9q7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHC3GIVahCq8wH8vNaC5tjUSxW87p8PEU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,7 +1,6 @@
 package com.development.kc.kiguchiicongenerator
 
 import android.graphics.*
-import android.graphics.drawable.VectorDrawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.annotation.Nullable
@@ -17,6 +16,9 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.ListView
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
+import kotlinx.android.synthetic.main.main_views.*
 import kotlin.math.roundToInt
 
 
@@ -37,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         /*ここから１セット*/
         var backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_1_color, null)
         var lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_1_line, null)
-        setParts(R.id.hair_b_layer, lineDrawable, R.color.green, backDrawable, R.color.yellow)
+        setParts(R.id.hair_b_layer, lineDrawable, null, backDrawable, R.color.black)
         /*ここまで１セット*/
 
         /*ここから１セット*/
@@ -57,15 +59,20 @@ class MainActivity : AppCompatActivity() {
 
         backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_bang_1_color, null)
         lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_bang_1_line, null)
-        setParts(R.id.bang_layer, lineDrawable, R.color.green, backDrawable, R.color.yellow)
+        setParts(R.id.bang_layer, lineDrawable, null, backDrawable, R.color.black)
         //テストここまで
 
-
+        val backGround = findViewById<ConstraintLayout>(R.id.canvas_background)
+        backGround.background.setColorFilter(getMyColor(R.color.green), PorterDuff.Mode.SRC_ATOP)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        MobileAds.initialize(this, "ca-app-pub-4566858215490503~4860130627")
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
 //        toolbar.setTitle(R.string.app_name)
@@ -99,11 +106,21 @@ class MainActivity : AppCompatActivity() {
 
         toolbar.setNavigationIcon(R.mipmap.rinkaku_naviicon)
 
-        val adapter: ArrayAdapter<String> = ItemListAdapter(this)
+        val adapter: ArrayAdapter<Int> = ItemListAdapter(this)
         val partsList = findViewById<ListView>(R.id.parts_names)
         val arr = resources.getStringArray(R.array.parts_names)
-        adapter.addAll(arr.toList())
+//        adapter.addAll(arr.toList())
         partsList.adapter = adapter
+
+        //ColorPickerDialogの呼出し
+        this.imageView.setOnClickListener{ v: View ->
+            var selectColor: Int = android.R.color.black
+            val listener = ColorPickerDialog.OnColorChangedListener{ color: Int ->
+                selectColor = color
+            }
+            val dialog = ColorPickerDialog(this, listener, android.R.color.black)
+            dialog.show()
+        }
 
     }
 
@@ -113,12 +130,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setParts(layerId: Int, @Nullable lineDrawable: VectorDrawableCompat?, @Nullable lineColorId: Int?, @Nullable backDrawable: VectorDrawableCompat?, @Nullable backColorId: Int?){
-        if (backColorId != null && backDrawable is VectorDrawableCompat){
-            backDrawable.setColorFilter(getMyColor(backColorId), PorterDuff.Mode.SRC_ATOP)
-        }
-
         if (lineColorId is Int && lineDrawable is VectorDrawableCompat){
             lineDrawable.setColorFilter(getMyColor(lineColorId), PorterDuff.Mode.SRC_ATOP)
+        }
+
+        if (backColorId != null && backDrawable is VectorDrawableCompat){
+            backDrawable.setColorFilter(getMyColor(backColorId), PorterDuff.Mode.SRC_ATOP)
         }
 
         val layer =  findViewById<ConstraintLayout>(layerId)
