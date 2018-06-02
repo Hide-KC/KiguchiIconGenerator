@@ -3,13 +3,8 @@
     <item>
         <shape android:shape="rectangle">
             <corners
-                android:topRightRadius="@dimen/rounded_corners_radius"
-                android:bottomLeftRadius="@dimen/rounded_corners_radius"
-                android:bottomRightRadius="@dimen/rounded_corners_radius"
-                android:topLeftRadius="@dimen/rounded_corners_radius"
+                android:radius="@dimen/canvas_corners_radius"
                 />
-
-            <!-- test -->
             <solid
                 android:color="@null"
                 />

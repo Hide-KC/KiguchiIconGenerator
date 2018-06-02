@@ -6,7 +6,12 @@
     <dimen name="canvas_side_margin_listview">32dp</dimen>
 
     <dimen name="color_picker_layout_height">220dp</dimen>
-    <dimen name="rounded_corners_radius">10dp</dimen>
+    <dimen name="canvas_corners_radius">10dp</dimen>
+    <dimen name="huebar_thumb_width">4dp</dimen>
+    <dimen name="huebar_coners_radius">2dp</dimen>
+
+    <dimen name="grid_margin">4dp</dimen>
+
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>

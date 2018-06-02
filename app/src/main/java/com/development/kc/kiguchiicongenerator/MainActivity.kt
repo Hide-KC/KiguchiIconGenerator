@@ -3,6 +3,7 @@ package com.development.kc.kiguchiicongenerator
 import android.graphics.*
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.support.annotation.Nullable
 import android.support.constraint.ConstraintLayout
 import android.support.graphics.drawable.VectorDrawableCompat
@@ -23,13 +24,21 @@ import kotlin.math.roundToInt
 
 
 class MainActivity : AppCompatActivity() {
+    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
+        super.onSaveInstanceState(outState, outPersistentState)
+
+        //各アイテムの選択状況を保存する。
+
+    }
+
+
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         val commentLayer = findViewById<ConstraintLayout>(R.id.comment_layer)
         val commentHeight = commentLayer.height
         val textSize = (commentHeight * 0.1).roundToInt()
-        val teststring = "₍₍(ง˘ω˘)ว⁾⁾"
-        val testBitmap = BitmapGenerator.textToBitmap(Color.RED, teststring, textSize)
+        val teststring = "せりふ！"
+        val testBitmap = DrawableController.textToBitmap(this, getMyColor(R.color.black), teststring, textSize)
 
         val commentView = findViewById<ImageView>(R.id.comment)
         commentView.setImageBitmap(testBitmap)
@@ -39,13 +48,13 @@ class MainActivity : AppCompatActivity() {
         /*ここから１セット*/
         var backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_1_color, null)
         var lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_1_line, null)
-        setParts(R.id.hair_b_layer, lineDrawable, null, backDrawable, R.color.black)
+        setParts(R.id.hair_b_layer, lineDrawable, null, backDrawable, getMyColor(R.color.black))
         /*ここまで１セット*/
 
         /*ここから１セット*/
         backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_body_1_color, null)
         lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_body_1_line, null)
-        setParts(R.id.body_layer, lineDrawable, null, backDrawable, R.color.pale_orange)
+        setParts(R.id.body_layer, lineDrawable, null, backDrawable, Color.rgb(80,80,80))
         /*ここまで１セット*/
 
         /*ここから１セット*/
@@ -55,11 +64,11 @@ class MainActivity : AppCompatActivity() {
 
         backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_1_color, null)
         lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_1_line, null)
-        setParts(R.id.mouth_layer, lineDrawable, null, backDrawable, R.color.pink)
+        setParts(R.id.mouth_layer, lineDrawable, null, backDrawable, getMyColor(R.color.pink))
 
         backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_bang_1_color, null)
         lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_bang_1_line, null)
-        setParts(R.id.bang_layer, lineDrawable, null, backDrawable, R.color.black)
+        setParts(R.id.bang_layer, lineDrawable, null, backDrawable, getMyColor(R.color.black))
         //テストここまで
 
         val backGround = findViewById<ConstraintLayout>(R.id.canvas_background)
@@ -114,12 +123,9 @@ class MainActivity : AppCompatActivity() {
 
         //ColorPickerDialogの呼出し
         this.imageView.setOnClickListener{ v: View ->
-            var selectColor: Int = android.R.color.black
-            val listener = ColorPickerDialog.OnColorChangedListener{ color: Int ->
-                selectColor = color
-            }
-            val dialog = ColorPickerDialog(this, listener, android.R.color.black)
-            dialog.show()
+            //色選択対象のIDを渡す。R.drawable.xxx
+            val dialog = ColorPickerDialogFragment.newInstance(null, 0)
+            dialog.show(this.supportFragmentManager, this.javaClass.simpleName)
         }
 
     }
@@ -129,13 +135,13 @@ class MainActivity : AppCompatActivity() {
         return ContextCompat.getColor(this, id)
     }
 
-    private fun setParts(layerId: Int, @Nullable lineDrawable: VectorDrawableCompat?, @Nullable lineColorId: Int?, @Nullable backDrawable: VectorDrawableCompat?, @Nullable backColorId: Int?){
-        if (lineColorId is Int && lineDrawable is VectorDrawableCompat){
-            lineDrawable.setColorFilter(getMyColor(lineColorId), PorterDuff.Mode.SRC_ATOP)
+    private fun setParts(layerId: Int, @Nullable lineDrawable: VectorDrawableCompat?, @Nullable lineColor: Int?, @Nullable backDrawable: VectorDrawableCompat?, @Nullable backColor: Int?){
+        if (lineColor is Int && lineDrawable is VectorDrawableCompat){
+            lineDrawable.setColorFilter(lineColor, PorterDuff.Mode.SRC_ATOP)
         }
 
-        if (backColorId != null && backDrawable is VectorDrawableCompat){
-            backDrawable.setColorFilter(getMyColor(backColorId), PorterDuff.Mode.SRC_ATOP)
+        if (backColor != null && backDrawable is VectorDrawableCompat){
+            backDrawable.setColorFilter(backColor, PorterDuff.Mode.SRC_ATOP)
         }
 
         val layer =  findViewById<ConstraintLayout>(layerId)

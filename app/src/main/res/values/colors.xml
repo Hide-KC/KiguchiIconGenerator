@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#c9ff93</color>
     <color name="colorPrimaryDark">#7fff7f</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#ff4081</color>
     <color name="icon_gray">#363636</color>
 
     <color name="list_back">#10000000</color>
@@ -13,7 +13,7 @@
     <color name="green">#00ff00</color>
 
     //テスト配色
-    <color name="pale_orange">#fffce2c4</color>
+    <color name="pale_orange">#fce2c4</color>
     <color name="black">#ff524e4d</color>
     <color name="pink">#ffdf7163</color>
 

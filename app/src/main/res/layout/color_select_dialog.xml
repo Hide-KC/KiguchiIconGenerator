@@ -9,7 +9,7 @@
         android:id="@+id/preview_layout"
         android:layout_width="0dp"
         android:layout_height="@dimen/color_picker_layout_height"
-        android:background="@android:color/darker_gray"
+        android:background="@color/pale_orange"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -35,10 +35,67 @@
         android:layout_height="@dimen/color_picker_layout_height"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/preview_layout">
+        app:layout_constraintTop_toBottomOf="@+id/preview_layout"
+        app:layout_constraintVertical_bias="0.0">
 
 
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.8" />
+
+        <com.development.kc.kiguchiicongenerator.SVPlaneView
+            android:id="@+id/sv_plane"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            app:hue="0"
+            app:layout_constraintBottom_toTopOf="@+id/hue_bar"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!--maxがSVPlaneViewと密結合になってしまうためカスタムレイアウトに取り込む-->
+        <SeekBar
+            android:id="@+id/hue_bar"
+            style="@style/HueBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:max="360"
+            android:progress="0"
+            android:progressDrawable="@drawable/huebar_drawable"
+            android:thumb="@drawable/huebar_thumb_drawable"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/sv_plane"
+            app:layout_constraintStart_toStartOf="@+id/sv_plane" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SVPlane(SV平面)"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="@+id/sv_plane"
+            app:layout_constraintTop_toTopOf="@+id/sv_plane" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Huebar(色相バー)"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toTopOf="@+id/hue_bar"
+            app:layout_constraintStart_toStartOf="@+id/sv_plane" />
 
     </android.support.constraint.ConstraintLayout>
 

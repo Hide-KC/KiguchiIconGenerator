@@ -16,7 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 
-public class ColorPickerDialog extends Dialog {
+public class YAMsColorPickerDialog extends Dialog {
 
     public interface OnColorChangedListener {
         void colorChanged(int color);
@@ -25,7 +25,7 @@ public class ColorPickerDialog extends Dialog {
     private OnColorChangedListener mListener;
     private int mInitialColor;
 
-    private static class ColorPickerView extends View {
+    public static class YAMsColorPickerView extends View {
 
     	private Paint mPaint, mPaintC;
         private Paint mOKPaint;
@@ -36,7 +36,7 @@ public class ColorPickerDialog extends Dialog {
         private int selectColor;
         private float selectHue = 0;
          
-        ColorPickerView(Context c, OnColorChangedListener l, int color) {
+        YAMsColorPickerView(Context c, OnColorChangedListener l, int color) {
             super(c);
             mListener = l;
             selectColor = color;
@@ -305,7 +305,7 @@ public class ColorPickerDialog extends Dialog {
     }
     
     
-    public ColorPickerDialog(Context context, OnColorChangedListener listener, int initialColor) {
+    public YAMsColorPickerDialog(Context context, OnColorChangedListener listener, int initialColor) {
     	super(context);
     	mListener = listener;
     	mInitialColor = initialColor;
@@ -321,7 +321,7 @@ public class ColorPickerDialog extends Dialog {
         };
 
         ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-        setContentView(new ColorPickerView(getContext(), l, mInitialColor), lp);
+        setContentView(new YAMsColorPickerView(getContext(), l, mInitialColor), lp);
         setTitle("- Color -");
     }
 

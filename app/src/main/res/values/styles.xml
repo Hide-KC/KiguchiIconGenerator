@@ -11,5 +11,11 @@
     <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    
+    <style name="HueBar" parent="Widget.AppCompat.SeekBar">
+        <item name="android:progressBackgroundTint">#808080</item>
+        <item name="android:progressTint">#00ffffff</item>
+        <item name="android:colorControlActivated">#c51162</item>
+    </style>
 
 </resources>

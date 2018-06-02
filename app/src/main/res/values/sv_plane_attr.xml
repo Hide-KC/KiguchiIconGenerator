@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SVPlaneView">
+        <attr name="hue" format="float"/>
+        <attr name="saturation" format="float"/>
+        <attr name="brightness" format="float"/>
+    </declare-styleable>
+
+    <declare-styleable name="Themes">
+        <attr name="svPlaneViewStyle" format="reference"/>
+    </declare-styleable>
+
+</resources>
