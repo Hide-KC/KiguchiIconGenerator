@@ -18,8 +18,8 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.ListView
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
-import kotlinx.android.synthetic.main.main_views.*
 import kotlin.math.roundToInt
 
 
@@ -48,13 +48,13 @@ class MainActivity : AppCompatActivity() {
         /*ここから１セット*/
         var backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_1_color, null)
         var lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_1_line, null)
-        setParts(R.id.hair_b_layer, lineDrawable, null, backDrawable, getMyColor(R.color.black))
+        setParts(R.id.hair_b_layer, lineDrawable, null, backDrawable, null)
         /*ここまで１セット*/
 
         /*ここから１セット*/
         backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_body_1_color, null)
         lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_body_1_line, null)
-        setParts(R.id.body_layer, lineDrawable, null, backDrawable, Color.rgb(80,80,80))
+        setParts(R.id.body_layer, lineDrawable, null, backDrawable, null)
         /*ここまで１セット*/
 
         /*ここから１セット*/
@@ -64,15 +64,15 @@ class MainActivity : AppCompatActivity() {
 
         backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_1_color, null)
         lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_1_line, null)
-        setParts(R.id.mouth_layer, lineDrawable, null, backDrawable, getMyColor(R.color.pink))
+        setParts(R.id.mouth_layer, lineDrawable, null, backDrawable, null)
 
         backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_bang_1_color, null)
         lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_bang_1_line, null)
-        setParts(R.id.bang_layer, lineDrawable, null, backDrawable, getMyColor(R.color.black))
+        setParts(R.id.bang_layer, lineDrawable, null, backDrawable, null)
         //テストここまで
 
         val backGround = findViewById<ConstraintLayout>(R.id.canvas_background)
-        backGround.background.setColorFilter(getMyColor(R.color.green), PorterDuff.Mode.SRC_ATOP)
+        backGround.background.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,6 +81,7 @@ class MainActivity : AppCompatActivity() {
 
         MobileAds.initialize(this, "ca-app-pub-4566858215490503~4860130627")
         val adRequest = AdRequest.Builder().build()
+        val adView = findViewById<AdView>(R.id.adView)
         adView.loadAd(adRequest)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -113,16 +114,17 @@ class MainActivity : AppCompatActivity() {
             v: View -> drawerLayout.openDrawer(Gravity.LEFT)
         }
 
-        toolbar.setNavigationIcon(R.mipmap.rinkaku_naviicon)
+//        toolbar.setNavigationIcon(android.R.drawable.)
 
-        val adapter: ArrayAdapter<Int> = ItemListAdapter(this)
+        val adapter: ArrayAdapter<Int> = GroupListAdapter(this)
         val partsList = findViewById<ListView>(R.id.parts_names)
         val arr = resources.getStringArray(R.array.parts_names)
 //        adapter.addAll(arr.toList())
         partsList.adapter = adapter
 
         //ColorPickerDialogの呼出し
-        this.imageView.setOnClickListener{ v: View ->
+        val iv = findViewById<ImageView>(R.id.imageView)
+        iv.setOnClickListener{ v: View ->
             //色選択対象のIDを渡す。R.drawable.xxx
             val dialog = ColorPickerDialogFragment.newInstance(null, 0)
             dialog.show(this.supportFragmentManager, this.javaClass.simpleName)

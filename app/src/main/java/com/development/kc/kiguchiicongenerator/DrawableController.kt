@@ -2,8 +2,11 @@ package com.development.kc.kiguchiicongenerator
 
 import android.content.Context
 import android.graphics.*
+import android.support.graphics.drawable.VectorDrawableCompat
 
 object DrawableController {
+
+
     //文字列をBitmapにして返す
     fun textToBitmap(context: Context, color: Int, text: String, size: Int): Bitmap {
         val paint = Paint()

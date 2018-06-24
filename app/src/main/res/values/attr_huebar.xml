@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="HueBar">
+        <attr name="hue" format="float"/>
+        <attr name="stroke_size" format="dimension"/>
+        <attr name="pick" format="float"/>
+    </declare-styleable>
+
+    <declare-styleable name="HueBarThemes">
+        <attr name="huebarStyle" format="reference"/>
+    </declare-styleable>
+
+</resources>

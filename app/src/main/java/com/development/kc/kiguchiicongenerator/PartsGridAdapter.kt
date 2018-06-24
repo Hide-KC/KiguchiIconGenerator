@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 
-class PartsListAdapter(context: Context) : ArrayAdapter<Int>(context, android.R.layout.simple_list_item_1){
+class PartsGridAdapter(context: Context) : ArrayAdapter<Int>(context, android.R.layout.simple_list_item_1){
     private val inflater = LayoutInflater.from(context)
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {

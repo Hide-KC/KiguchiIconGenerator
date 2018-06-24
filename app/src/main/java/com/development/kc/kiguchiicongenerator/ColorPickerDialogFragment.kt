@@ -3,15 +3,27 @@ package com.development.kc.kiguchiicongenerator
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
+import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.util.Log
-import android.widget.SeekBar
-import android.widget.SeekBar.*
+import android.widget.ImageView
 
 class ColorPickerDialogFragment: DialogFragment() {
+    override fun onDestroy() {
+        super.onDestroy()
+        mColorChangeSubject.detachAll()
+    }
+
+    public val BACK = 0
+    public val LINE = 1
+    private val mColorChangeSubject: Subject = ColorChangeSubject()
     private var targetPartsId: Int = 0
+    private var targetColorArea: Int = BACK
 
     init {
 
@@ -33,28 +45,105 @@ class ColorPickerDialogFragment: DialogFragment() {
         * イベント付与したり値をセットしたり
         * */
 
-        val svPlane = view?.findViewById<SVPlaneView>(R.id.sv_plane)
-        val hueBar = view?.findViewById<SeekBar>(R.id.hue_bar)
-        hueBar?.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                svPlane?.setHue(progress * 1f)
-                svPlane?.invalidate()
-            }
+        //プレビューウィンドウの取得
+        val preview = view?.findViewById<ConstraintLayout>(R.id.preview_layout)
 
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-            }
+        //セリフの設定
+        if (preview != null){
+            val viewTreeObserver = preview.viewTreeObserver
+            viewTreeObserver.addOnGlobalLayoutListener {
+                val textSize = Math.round(preview.height * 0.1f)
+                val teststring = "ぷれびゅーがめん！"
+                val testBitmap = DrawableController.textToBitmap(this.activity!!, Color.BLACK, teststring, textSize)
 
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                val commentView = preview.findViewById<ImageView>(R.id.comment)
+                commentView?.setImageBitmap(testBitmap)
             }
+        }
 
+
+
+        //セットするImageViewを取得
+        var baseLineImage = preview?.findViewById<ConstraintLayout>(R.id.hair_b_layer)?.findViewById<ImageView>(R.id.base_line)
+        var baseBackImage = preview?.findViewById<ConstraintLayout>(R.id.hair_b_layer)?.findViewById<ImageView>(R.id.base_back)
+        var lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_1_line, null)
+        var backVD = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_1_color, null)
+        baseLineImage?.setImageDrawable(lineVD)
+        baseBackImage?.setImageDrawable(backVD)
+
+        baseLineImage = preview?.findViewById<ConstraintLayout>(R.id.body_layer)?.findViewById(R.id.base_line)
+        baseBackImage = preview?.findViewById<ConstraintLayout>(R.id.body_layer)?.findViewById(R.id.base_back)
+        lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_body_1_line, null)
+        backVD = VectorDrawableCompat.create(resources, R.drawable.ic_body_1_color, null)
+        baseLineImage?.setImageDrawable(lineVD)
+        baseBackImage?.setImageDrawable(backVD)
+
+        baseLineImage = preview?.findViewById<ConstraintLayout>(R.id.eye_layer)?.findViewById(R.id.base_line)
+        lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_eye_1_line, null)
+        baseLineImage?.setImageDrawable(lineVD)
+
+        baseLineImage = preview?.findViewById<ConstraintLayout>(R.id.mouth_layer)?.findViewById(R.id.base_line)
+        baseBackImage = preview?.findViewById<ConstraintLayout>(R.id.mouth_layer)?.findViewById(R.id.base_back)
+        lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_1_line, null)
+        backVD = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_1_color, null)
+        baseLineImage?.setImageDrawable(lineVD)
+        baseBackImage?.setImageDrawable(backVD)
+
+        baseLineImage = preview?.findViewById<ConstraintLayout>(R.id.bang_layer)?.findViewById(R.id.base_line)
+        baseBackImage = preview?.findViewById<ConstraintLayout>(R.id.bang_layer)?.findViewById(R.id.base_back)
+        lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_bang_1_line, null)
+        backVD = VectorDrawableCompat.create(resources, R.drawable.ic_bang_1_color, null)
+        baseLineImage?.setImageDrawable(lineVD)
+        baseBackImage?.setImageDrawable(backVD)
+
+        //BACK OR LINEの変更はImageView.onClickで切り替え
+        val backColorImage = view?.findViewById<ImageView>(R.id.back_color_image)
+        val lineColorImage = view?.findViewById<ImageView>(R.id.line_color_image)
+        backColorImage?.setOnClickListener{ targetColorArea = BACK }
+        lineColorImage?.setOnClickListener{ targetColorArea = LINE }
+
+        val sbPlane = view?.findViewById<AbsHSBView>(R.id.sb_plane)
+        sbPlane?.setOnHSBChangeListener(object: AbsHSBView.OnHSBChangedListener{
+            override fun onHSBChanged(hue: Float, saturation: Float, brightness: Float) {
+                val color = Color.HSVToColor(floatArrayOf(hue, saturation, brightness))
+                //targetColorArea, パーツのImageViewにもIObserverを実装する（カスタムビュー化）
+                //→HueBarやSBPlaneなど、notify()を叩いたら全てに反映される。
+
+                if (targetColorArea == BACK){
+                    backColorImage?.setColorFilter(color)
+                    baseBackImage?.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
+                } else if (targetColorArea == LINE){
+                    lineColorImage?.setColorFilter(color)
+                    baseLineImage?.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
+                }
+
+                mColorChangeSubject.notifyColorChange(hue, saturation, brightness)
+            }
         })
+
+        val hueBar = view?.findViewById<AbsHSBView>(R.id.hue_bar)
+        hueBar?.setOnHSBChangeListener(object: AbsHSBView.OnHSBChangedListener{
+            override fun onHSBChanged(hue: Float, saturation: Float, brightness: Float) {
+                mColorChangeSubject.notifyColorChange(hue, saturation, brightness)
+            }
+        })
+
+        if (sbPlane is IObserver){
+            mColorChangeSubject.attach(sbPlane)
+        }
+
+        if (hueBar is IObserver){
+            mColorChangeSubject.attach(hueBar)
+        }
+
+        Log.d(this.javaClass.simpleName, hueBar?.width.toString())
 
         val builder = AlertDialog.Builder(activity)
         builder.setView(view)
-                .setPositiveButton(android.R.string.ok, DialogInterface.OnClickListener { dialog, which ->
+                .setPositiveButton(android.R.string.ok) { dialog, which ->
                     Log.d(this.javaClass.simpleName, "OK")
                     dialog.dismiss()
-                })
+                }
         return builder.create()
     }
 

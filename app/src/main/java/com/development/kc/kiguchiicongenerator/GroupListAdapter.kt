@@ -8,11 +8,13 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 
-class ItemListAdapter(context: Context) : ArrayAdapter<Int> (context, android.R.layout.simple_list_item_1) {
+class GroupListAdapter(context: Context) : ArrayAdapter<Int> (context, android.R.layout.simple_list_item_1) {
     private val inflater = LayoutInflater.from(context)
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val cv = convertView ?: inflater.inflate(R.layout.parts_base, null).apply { tag = ItemViewHolder(this) }
+        val cv = convertView ?: inflater.inflate(R.layout.parts_base, null).apply {
+            tag = ItemViewHolder(this)
+        }
 
         val holder = cv.tag as ItemViewHolder
 

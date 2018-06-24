@@ -75,20 +75,6 @@
             android:layout_marginTop="8dp"
             app:srcCompat="@android:drawable/alert_light_frame" />
 
-        <SeekBar
-            android:id="@+id/hue_bar"
-            style="@style/HueBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
-            android:max="359"
-            android:progress="180"
-            android:progressDrawable="@drawable/huebar_drawable"
-            android:thumb="@drawable/huebar_thumb_drawable"
-
-            />
-
 
     </FrameLayout>
 
