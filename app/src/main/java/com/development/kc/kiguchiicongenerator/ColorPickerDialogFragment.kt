@@ -96,7 +96,7 @@ class ColorPickerDialogFragment: DialogFragment() {
         baseBackImage?.setImageDrawable(backVD)
 
         //BACK OR LINEの変更はImageView.onClickで切り替え
-        val backColorImage = view?.findViewById<ImageView>(R.id.back_color_image)
+        val backColorImage = view?.findViewById<ImageView>(R.id.tint_color_image)
         val lineColorImage = view?.findViewById<ImageView>(R.id.line_color_image)
         backColorImage?.setOnClickListener{ targetColorArea = BACK }
         lineColorImage?.setOnClickListener{ targetColorArea = LINE }
