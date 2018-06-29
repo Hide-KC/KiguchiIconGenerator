@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_layout"
+    android:background="@color/pale_orange"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -23,9 +24,9 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="horizontal"
-        android:background="@android:color/darker_gray"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toTopOf="@+id/swap_layout"
-        app:layout_constraintEnd_toStartOf="@+id/parts_names"
+        app:layout_constraintEnd_toStartOf="@+id/group_list"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
@@ -44,14 +45,36 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <Button
+            android:id="@+id/swap_button"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="Swap"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@android:drawable/alert_light_frame" />
+
 
     </android.support.constraint.ConstraintLayout>
 
     <ListView
-        android:id="@+id/parts_names"
-        android:layout_width="60dp"
+        android:id="@+id/group_list"
+        android:layout_width="52dp"
         android:layout_height="0dp"
-        android:background="@color/list_back"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/shape_rounded_corners_all_semitransparent"
         app:layout_constraintBottom_toTopOf="@+id/adView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
@@ -61,19 +84,16 @@
     <FrameLayout
         android:id="@+id/swap_layout"
         android:layout_width="0dp"
-        android:layout_height="220dp"
+        android:layout_height="200dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toTopOf="@+id/adView"
-        app:layout_constraintEnd_toStartOf="@+id/parts_names"
+        app:layout_constraintEnd_toStartOf="@+id/group_list"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            app:srcCompat="@android:drawable/alert_light_frame" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/canvas_frame">
 
 
     </FrameLayout>

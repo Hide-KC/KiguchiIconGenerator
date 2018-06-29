@@ -21,7 +21,7 @@
 
         <include
             android:id="@+id/hair_b_layer"
-            layout="@layout/canvas_base"
+            layout="@layout/layer_base"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -33,7 +33,7 @@
 
         <include
             android:id="@+id/body_layer"
-            layout="@layout/canvas_base"
+            layout="@layout/layer_base"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -45,7 +45,7 @@
 
         <include
             android:id="@+id/face_layer"
-            layout="@layout/canvas_base"
+            layout="@layout/layer_base"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:visibility="invisible"
@@ -58,7 +58,7 @@
 
         <include
             android:id="@+id/eye_layer"
-            layout="@layout/canvas_base"
+            layout="@layout/layer_base"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -70,7 +70,7 @@
 
         <include
             android:id="@+id/mouth_layer"
-            layout="@layout/canvas_base"
+            layout="@layout/layer_base"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -82,7 +82,7 @@
 
         <include
             android:id="@+id/bang_layer"
-            layout="@layout/canvas_base"
+            layout="@layout/layer_base"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -94,7 +94,7 @@
 
         <include
             android:id="@+id/hair_acc_layer"
-            layout="@layout/canvas_base"
+            layout="@layout/layer_base"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:visibility="invisible"
@@ -107,7 +107,7 @@
 
         <include
             android:id="@+id/face_acc_layer"
-            layout="@layout/canvas_base"
+            layout="@layout/layer_base"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:visibility="invisible"

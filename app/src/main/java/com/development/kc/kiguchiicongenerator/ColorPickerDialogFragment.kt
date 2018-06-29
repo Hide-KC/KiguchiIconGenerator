@@ -2,7 +2,6 @@ package com.development.kc.kiguchiicongenerator
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
@@ -65,34 +64,34 @@ class ColorPickerDialogFragment: DialogFragment() {
 
         //セットするImageViewを取得
         var baseLineImage = preview?.findViewById<ConstraintLayout>(R.id.hair_b_layer)?.findViewById<ImageView>(R.id.base_line)
-        var baseBackImage = preview?.findViewById<ConstraintLayout>(R.id.hair_b_layer)?.findViewById<ImageView>(R.id.base_back)
-        var lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_1_line, null)
-        var backVD = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_1_color, null)
+        var baseBackImage = preview?.findViewById<ConstraintLayout>(R.id.hair_b_layer)?.findViewById<ImageView>(R.id.base_tint)
+        var lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_001_line, null)
+        var backVD = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_001_tint, null)
         baseLineImage?.setImageDrawable(lineVD)
         baseBackImage?.setImageDrawable(backVD)
 
         baseLineImage = preview?.findViewById<ConstraintLayout>(R.id.body_layer)?.findViewById(R.id.base_line)
-        baseBackImage = preview?.findViewById<ConstraintLayout>(R.id.body_layer)?.findViewById(R.id.base_back)
-        lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_body_1_line, null)
-        backVD = VectorDrawableCompat.create(resources, R.drawable.ic_body_1_color, null)
+        baseBackImage = preview?.findViewById<ConstraintLayout>(R.id.body_layer)?.findViewById(R.id.base_tint)
+        lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_body_001_line, null)
+        backVD = VectorDrawableCompat.create(resources, R.drawable.ic_body_001_tint, null)
         baseLineImage?.setImageDrawable(lineVD)
         baseBackImage?.setImageDrawable(backVD)
 
         baseLineImage = preview?.findViewById<ConstraintLayout>(R.id.eye_layer)?.findViewById(R.id.base_line)
-        lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_eye_1_line, null)
+        lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_eye_001_line, null)
         baseLineImage?.setImageDrawable(lineVD)
 
         baseLineImage = preview?.findViewById<ConstraintLayout>(R.id.mouth_layer)?.findViewById(R.id.base_line)
-        baseBackImage = preview?.findViewById<ConstraintLayout>(R.id.mouth_layer)?.findViewById(R.id.base_back)
-        lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_1_line, null)
-        backVD = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_1_color, null)
+        baseBackImage = preview?.findViewById<ConstraintLayout>(R.id.mouth_layer)?.findViewById(R.id.base_tint)
+        lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_001_line, null)
+        backVD = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_001_tint, null)
         baseLineImage?.setImageDrawable(lineVD)
         baseBackImage?.setImageDrawable(backVD)
 
         baseLineImage = preview?.findViewById<ConstraintLayout>(R.id.bang_layer)?.findViewById(R.id.base_line)
-        baseBackImage = preview?.findViewById<ConstraintLayout>(R.id.bang_layer)?.findViewById(R.id.base_back)
-        lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_bang_1_line, null)
-        backVD = VectorDrawableCompat.create(resources, R.drawable.ic_bang_1_color, null)
+        baseBackImage = preview?.findViewById<ConstraintLayout>(R.id.bang_layer)?.findViewById(R.id.base_tint)
+        lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_bang_001_line, null)
+        backVD = VectorDrawableCompat.create(resources, R.drawable.ic_bang_001_tint, null)
         baseLineImage?.setImageDrawable(lineVD)
         baseBackImage?.setImageDrawable(backVD)
 

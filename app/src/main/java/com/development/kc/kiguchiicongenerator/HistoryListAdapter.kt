@@ -10,7 +10,7 @@ class HistoryListAdapter(context: Context) : ArrayAdapter<HistoryDTO>(context, a
     private val inflater = LayoutInflater.from(context)
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val cv = convertView?: inflater.inflate(R.layout.history_views, null).apply {
+        val cv = convertView?: inflater.inflate(R.layout.history_layout, null).apply {
             tag = ItemViewHolder(this)
         }
 

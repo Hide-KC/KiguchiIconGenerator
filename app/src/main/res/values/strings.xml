@@ -11,7 +11,7 @@
 
     <string name="flaticon_copyrights">Designed by Freepik and distributed by Flaticon</string>
     
-    <string-array name="parts_names">
+    <string-array name="group_names">
         <item>前髪</item>
         <item>後髪</item>
         <item>目</item>

@@ -12,23 +12,18 @@ class GroupListAdapter(context: Context) : ArrayAdapter<Int> (context, android.R
     private val inflater = LayoutInflater.from(context)
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val cv = convertView ?: inflater.inflate(R.layout.parts_base, null).apply {
+        val cv = convertView?: inflater.inflate(R.layout.parts_base, null).apply {
             tag = ItemViewHolder(this)
         }
 
         val holder = cv.tag as ItemViewHolder
-
-
+        holder.lineView.setImageResource(getItem(position))
         return cv
     }
 
 
     inner class ItemViewHolder(view: View){
-        val backView = view.findViewById<ImageView>(R.id.base_back)
         val lineView = view.findViewById<ImageView>(R.id.base_line)
-        val rightGuide = view.findViewById<Guideline>(R.id.base_line_right)
-        val leftGuide = view.findViewById<Guideline>(R.id.base_line_left)
-        val topGuide = view.findViewById<Guideline>(R.id.base_line_top)
     }
 
 

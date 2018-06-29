@@ -14,16 +14,27 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.Gravity
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.ImageView
-import android.widget.ListView
+import android.widget.*
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import kotlin.math.roundToInt
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener, ControllerFragment.OnKeyClickedListener {
+    private val CONTROLLER = "controller"
+    private val PARTS_GRID = "parts_grid"
+
+    override fun onPartsClicked(partsId: Int) {
+
+    }
+
+    private var swapFragmentState = ""
+
+    override fun onKeyClicked(keyDistraction: ControllerFragment.KeyDistraction) {
+
+    }
+
     override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
         super.onSaveInstanceState(outState, outPersistentState)
 
@@ -46,28 +57,28 @@ class MainActivity : AppCompatActivity() {
 
         //テストコード
         /*ここから１セット*/
-        var backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_1_color, null)
-        var lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_1_line, null)
+        var backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_001_tint, null)
+        var lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_001_line, null)
         setParts(R.id.hair_b_layer, lineDrawable, null, backDrawable, null)
         /*ここまで１セット*/
 
         /*ここから１セット*/
-        backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_body_1_color, null)
-        lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_body_1_line, null)
+        backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_body_001_tint, null)
+        lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_body_001_line, null)
         setParts(R.id.body_layer, lineDrawable, null, backDrawable, null)
         /*ここまで１セット*/
 
         /*ここから１セット*/
-        lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_eye_1_line, null)
+        lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_eye_001_line, null)
         setParts(R.id.eye_layer, lineDrawable, null, null, null)
         /*ここまで１セット*/
 
-        backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_1_color, null)
-        lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_1_line, null)
+        backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_001_tint, null)
+        lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_001_line, null)
         setParts(R.id.mouth_layer, lineDrawable, null, backDrawable, null)
 
-        backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_bang_1_color, null)
-        lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_bang_1_line, null)
+        backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_bang_001_tint, null)
+        lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_bang_001_line, null)
         setParts(R.id.bang_layer, lineDrawable, null, backDrawable, null)
         //テストここまで
 
@@ -106,6 +117,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        //Drawerの生成
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         setSupportActionBar(toolbar)
@@ -114,13 +126,22 @@ class MainActivity : AppCompatActivity() {
             v: View -> drawerLayout.openDrawer(Gravity.LEFT)
         }
 
+        //HistoryListの生成
+        val historyList = drawerLayout.findViewById<ListView>(R.id.history_list)
+        val historyAdapter = HistoryListAdapter(this)
+        historyList.adapter = historyAdapter
+
 //        toolbar.setNavigationIcon(android.R.drawable.)
 
-        val adapter: ArrayAdapter<Int> = GroupListAdapter(this)
-        val partsList = findViewById<ListView>(R.id.parts_names)
-        val arr = resources.getStringArray(R.array.parts_names)
-//        adapter.addAll(arr.toList())
-        partsList.adapter = adapter
+        //GroupListの生成
+        val groupAdapter: ArrayAdapter<Int> = GroupListAdapter(this)
+        val groupList = findViewById<ListView>(R.id.group_list)
+        val arr = resources.getStringArray(R.array.group_names)
+        groupAdapter.add(R.drawable.ic_backhair_001_tint)
+        groupAdapter.add(R.drawable.ic_bang_001_tint)
+        groupAdapter.add(R.drawable.ic_body_001_tint)
+        groupAdapter.add(R.drawable.ic_eye_001_line)
+        groupList.adapter = groupAdapter
 
         //ColorPickerDialogの呼出し
         val iv = findViewById<ImageView>(R.id.imageView)
@@ -128,6 +149,34 @@ class MainActivity : AppCompatActivity() {
             //色選択対象のIDを渡す。R.drawable.xxx
             val dialog = ColorPickerDialogFragment.newInstance(null, 0)
             dialog.show(this.supportFragmentManager, this.javaClass.simpleName)
+        }
+
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.swap_layout, PartsGridFragment.newInstance(null, 0))
+        fragmentTransaction.commit()
+
+        val swapBtn = findViewById<Button>(R.id.swap_button)
+        swapBtn.setOnClickListener{v: View ->
+            val transaction = supportFragmentManager.beginTransaction()
+            if (swapFragmentState == PARTS_GRID || swapFragmentState == ""){
+                val f = supportFragmentManager.findFragmentByTag(CONTROLLER)
+                if (f == null){
+                    transaction.replace(R.id.swap_layout, ControllerFragment.newInstance(null, 0), CONTROLLER)
+                } else {
+                    transaction.attach(f)
+                }
+                transaction.commit()
+                swapFragmentState = CONTROLLER
+            } else if (swapFragmentState == CONTROLLER){
+                val f = supportFragmentManager.findFragmentByTag(PARTS_GRID)
+                if (f == null){
+                    transaction.replace(R.id.swap_layout, PartsGridFragment.newInstance(null, 0))
+                } else {
+                    transaction.attach(f)
+                }
+                transaction.commit()
+                swapFragmentState = PARTS_GRID
+            }
         }
 
     }
@@ -147,9 +196,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         val layer =  findViewById<ConstraintLayout>(layerId)
-        val backImg = layer.findViewById<ImageView>(R.id.base_back)
+        val backImg = layer.findViewById<ImageView>(R.id.base_tint)
         backImg.setImageDrawable(backDrawable)
         val lineImg = layer.findViewById<ImageView>(R.id.base_line)
         lineImg.setImageDrawable(lineDrawable)
     }
+
+
 }
