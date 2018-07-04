@@ -12,7 +12,7 @@ import android.widget.GridView
 
 class PartsGridFragment: AbsFragment() {
     interface OnPartsClickListener{
-        fun onPartsClicked(partsId: Int)
+        fun onPartsClicked(resStr: String)
     }
 
     private var partsClickListener: OnPartsClickListener? = null
@@ -29,7 +29,7 @@ class PartsGridFragment: AbsFragment() {
         val gridView = view.findViewById<GridView>(R.id.parts_grid)
         gridView.setOnItemClickListener { adapterView: AdapterView<*>, view1: View, i: Int, l: Long ->
             val adapter = gridView.adapter as PartsGridAdapter
-            partsClickListener?.onPartsClicked(adapter.getItem(i).partsResId)
+            partsClickListener?.onPartsClicked(adapter.getItem(i).resString)
         }
 
         if (this.context != null){
@@ -40,7 +40,7 @@ class PartsGridFragment: AbsFragment() {
             resNames.add(subStringResName(resources.getResourceEntryName(R.drawable.ic_bang_002_line), 4))
             resNames.add(subStringResName(resources.getResourceEntryName(R.drawable.ic_mouth_001_line), 4))
             for (name in resNames){
-                partsGridAdapter.add(PartsDTO(name, 0, Color.YELLOW, Color.parseColor("#ff555555")))
+                partsGridAdapter.add(PartsDTO(name, Color.YELLOW, Color.parseColor("#ff555555")))
             }
 
             gridView.adapter = partsGridAdapter
@@ -50,7 +50,7 @@ class PartsGridFragment: AbsFragment() {
     }
 
     companion object {
-        fun newInstance(targetFragment: Fragment?, targetPartsId: Int): PartsGridFragment{
+        fun newInstance(targetFragment: Fragment?, targetGroupResStr: String): PartsGridFragment{
             val args = Bundle()
             val fragment = PartsGridFragment()
             fragment.arguments = args

@@ -30,17 +30,17 @@
 
         <com.development.kc.kiguchiicongenerator.ObservableImageView
             android:id="@+id/line_color_image"
-            android:background="@android:color/white"
+            android:src="@android:color/white"
             android:layout_width="40dp"
             android:layout_height="25dp"
             app:layout_constraintEnd_toEndOf="@+id/textView5"
             app:layout_constraintStart_toStartOf="@+id/textView5"
             app:layout_constraintTop_toBottomOf="@+id/textView5"
-            app:srcCompat="@android:color/white" />
+            />
 
         <com.development.kc.kiguchiicongenerator.ObservableImageView
             android:id="@+id/tint_color_image"
-            android:background="@android:color/white"
+            android:src="@android:color/white"
             android:layout_width="40dp"
             android:layout_height="25dp"
             android:layout_marginEnd="8dp"
@@ -48,7 +48,7 @@
             app:layout_constraintEnd_toEndOf="@+id/textView4"
             app:layout_constraintStart_toStartOf="@+id/textView4"
             app:layout_constraintTop_toBottomOf="@+id/textView4"
-            app:srcCompat="@android:color/white" />
+            />
 
         <TextView
             android:id="@+id/textView4"
@@ -77,7 +77,7 @@
             android:layout_height="wrap_content"
             app:barrierDirection="right"
             app:constraint_referenced_ids="textView5,line_color_image,tint_color_image,textView4"
-            tools:layout_editor_absoluteX="360dp" />
+            app:layout_constraintStart_toStartOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 
@@ -100,7 +100,7 @@
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.55" />
 
-        <com.development.kc.kiguchiicongenerator.SBPlaneView xmlns:custom="http://schemas.android.com/apk/res/com.development.kc.kiguchiicongenerator"
+        <com.development.kc.kiguchiicongenerator.SBPlane xmlns:custom="http://schemas.android.com/apk/res/com.development.kc.kiguchiicongenerator"
             android:id="@+id/sb_plane"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -169,24 +169,14 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.development.kc.kiguchiicongenerator.ObservableTextView
-            android:id="@+id/code"
+            android:id="@+id/red_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="36dp"
-            android:text="#ffffff"
-            app:layout_constraintStart_toEndOf="@+id/barrier2"
-            app:layout_constraintTop_toBottomOf="@+id/green_value" />
-
-        <com.development.kc.kiguchiicongenerator.ObservableTextView
-            android:id="@+id/blue_value2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:text="(0～255)"
             app:layout_constraintStart_toEndOf="@+id/barrier2"
-            app:layout_constraintTop_toBottomOf="@+id/green_value" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.development.kc.kiguchiicongenerator.ObservableTextView
             android:id="@+id/green_value"
@@ -199,14 +189,24 @@
             app:layout_constraintTop_toBottomOf="@+id/red_value" />
 
         <com.development.kc.kiguchiicongenerator.ObservableTextView
-            android:id="@+id/red_value"
+            android:id="@+id/blue_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:text="(0～255)"
             app:layout_constraintStart_toEndOf="@+id/barrier2"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/green_value" />
+
+        <com.development.kc.kiguchiicongenerator.ObservableTextView
+            android:id="@+id/code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="36dp"
+            android:text="#ffffff"
+            app:layout_constraintStart_toEndOf="@+id/barrier2"
+            app:layout_constraintTop_toBottomOf="@+id/green_value" />
 
         <android.support.constraint.Barrier
             android:id="@+id/barrier2"
@@ -214,7 +214,7 @@
             android:layout_height="wrap_content"
             app:barrierDirection="right"
             app:constraint_referenced_ids="b_text2,r_text,code_text,g_text"
-            tools:layout_editor_absoluteX="360dp" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 

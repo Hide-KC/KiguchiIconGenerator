@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="SBPlaneView">
+    <declare-styleable name="SBPlane">
         <attr name="sb_plane_hue" format="float"/>
         <attr name="saturation" format="float"/>
         <attr name="brightness" format="float"/>

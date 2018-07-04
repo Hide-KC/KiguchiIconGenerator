@@ -99,8 +99,7 @@ class HueBar(context: Context, attrs: AttributeSet?): AbsHSBView(context, attrs)
         } else if (action == MotionEvent.ACTION_UP){
             showPreview = false
         }
-        Log.d(this.javaClass.simpleName, "Hue = " + getHue())
-        mListener?.onHSBChanged(getHue(), 1f, 1f)
+        mListener?.onHSBChanged(getHue(), getSaturation(), getBrightness())
         return true
     }
 

@@ -1,5 +1,6 @@
 package com.development.kc.kiguchiicongenerator
 
+import android.content.Intent
 import android.graphics.*
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -22,14 +23,24 @@ import kotlin.math.roundToInt
 
 
 class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener, ControllerFragment.OnKeyClickedListener {
-    private val CONTROLLER = "controller"
-    private val PARTS_GRID = "parts_grid"
 
-    override fun onPartsClicked(partsId: Int) {
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
+    private val CONTROLLER = "controller"
+    private val PARTS_GRID = "parts_grid"
+    private val FRAGMENT_STATE = "fragment_state"
+
     private var swapFragmentState = ""
+    private var selectedGroup = "" //TODO String型の管理で本当に良いの？
+
+    override fun onPartsClicked(resStr: String) {
+        //resStr: Group_Parts_PartsID_
+        val arr = resStr.split('_')
+        Toast.makeText(this, resStr, Toast.LENGTH_SHORT).show()
+    }
 
     override fun onKeyClicked(keyDistraction: ControllerFragment.KeyDistraction) {
 
@@ -37,11 +48,21 @@ class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener
 
     override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
         super.onSaveInstanceState(outState, outPersistentState)
-
-        //各アイテムの選択状況を保存する。
+        if (outState is Bundle){
+            outState.putString(FRAGMENT_STATE, swapFragmentState)
+        }
 
     }
 
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        if (savedInstanceState is Bundle){
+            val state = savedInstanceState[FRAGMENT_STATE]
+            if (state != null){
+                swapFragmentState = state.toString()
+            }
+        }
+    }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
@@ -95,6 +116,7 @@ class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener
         val adView = findViewById<AdView>(R.id.adView)
         adView.loadAd(adRequest)
 
+        //Toolbarの生成
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
 //        toolbar.setTitle(R.string.app_name)
 //        toolbar.setSubtitle(R.string.subtitle)
@@ -142,7 +164,9 @@ class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener
         groupAdapter.add(R.drawable.ic_body_001_tint)
         groupAdapter.add(R.drawable.ic_eye_001_line)
         groupList.adapter = groupAdapter
+        groupList.setOnItemClickListener { adapterView: AdapterView<*>, view1: View, i: Int, l: Long ->
 
+        }
         //ColorPickerDialogの呼出し
         val iv = findViewById<ImageView>(R.id.imageView)
         iv.setOnClickListener{ v: View ->
@@ -152,7 +176,7 @@ class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener
         }
 
         val fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.swap_layout, PartsGridFragment.newInstance(null, 0))
+        fragmentTransaction.replace(R.id.swap_layout, PartsGridFragment.newInstance(null, selectedGroup))
         fragmentTransaction.commit()
 
         val swapBtn = findViewById<Button>(R.id.swap_button)
@@ -170,7 +194,7 @@ class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener
             } else if (swapFragmentState == CONTROLLER){
                 val f = supportFragmentManager.findFragmentByTag(PARTS_GRID)
                 if (f == null){
-                    transaction.replace(R.id.swap_layout, PartsGridFragment.newInstance(null, 0))
+                    transaction.replace(R.id.swap_layout, PartsGridFragment.newInstance(null, selectedGroup))
                 } else {
                     transaction.attach(f)
                 }

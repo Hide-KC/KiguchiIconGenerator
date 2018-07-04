@@ -18,11 +18,11 @@ class ColorPickerDialogFragment: DialogFragment() {
         mColorChangeSubject.detachAll()
     }
 
-    public val BACK = 0
-    public val LINE = 1
+    val TINT = 0
+    val LINE = 1
     private val mColorChangeSubject: Subject = ColorChangeSubject()
     private var targetPartsId: Int = 0
-    private var targetColorArea: Int = BACK
+    private var targetColorArea: Int = TINT
 
     init {
 
@@ -35,107 +35,166 @@ class ColorPickerDialogFragment: DialogFragment() {
 
         //レイアウト展開
         val view = activity?.layoutInflater?.inflate(R.layout.color_select_dialog, null)
-        val args = arguments
-        if (args != null){
-            targetPartsId = args.getInt("parts_id", -1)
-        }
-
-        /*
-        * イベント付与したり値をセットしたり
-        * */
-
-        //プレビューウィンドウの取得
-        val preview = view?.findViewById<ConstraintLayout>(R.id.preview_layout)
-
-        //セリフの設定
-        if (preview != null){
-            val viewTreeObserver = preview.viewTreeObserver
-            viewTreeObserver.addOnGlobalLayoutListener {
-                val textSize = Math.round(preview.height * 0.1f)
-                val teststring = "ぷれびゅーがめん！"
-                val testBitmap = DrawableController.textToBitmap(this.activity!!, Color.BLACK, teststring, textSize)
-
-                val commentView = preview.findViewById<ImageView>(R.id.comment)
-                commentView?.setImageBitmap(testBitmap)
+        if (view != null){
+            val args = arguments
+            if (args != null){
+                targetPartsId = args.getInt("parts_id", -1)
             }
-        }
 
+            /*
+            * イベント付与したり値をセットしたり
+            * */
 
+            //プレビューウィンドウの取得
+            val preview = view.findViewById<ConstraintLayout>(R.id.preview_layout)
 
-        //セットするImageViewを取得
-        var baseLineImage = preview?.findViewById<ConstraintLayout>(R.id.hair_b_layer)?.findViewById<ImageView>(R.id.base_line)
-        var baseBackImage = preview?.findViewById<ConstraintLayout>(R.id.hair_b_layer)?.findViewById<ImageView>(R.id.base_tint)
-        var lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_001_line, null)
-        var backVD = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_001_tint, null)
-        baseLineImage?.setImageDrawable(lineVD)
-        baseBackImage?.setImageDrawable(backVD)
+            //セリフの設定
+            var baseLineImage: ImageView? = null
+            var baseBackImage: ImageView? = null
 
-        baseLineImage = preview?.findViewById<ConstraintLayout>(R.id.body_layer)?.findViewById(R.id.base_line)
-        baseBackImage = preview?.findViewById<ConstraintLayout>(R.id.body_layer)?.findViewById(R.id.base_tint)
-        lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_body_001_line, null)
-        backVD = VectorDrawableCompat.create(resources, R.drawable.ic_body_001_tint, null)
-        baseLineImage?.setImageDrawable(lineVD)
-        baseBackImage?.setImageDrawable(backVD)
+            if (preview != null){
+                val viewTreeObserver = preview.viewTreeObserver
+                viewTreeObserver.addOnGlobalLayoutListener {
+                    val textSize = Math.round(preview.height * 0.1f)
+                    val teststring = "ぷれびゅーがめん！"
+                    val testBitmap = DrawableController.textToBitmap(this.activity!!, Color.BLACK, teststring, textSize)
 
-        baseLineImage = preview?.findViewById<ConstraintLayout>(R.id.eye_layer)?.findViewById(R.id.base_line)
-        lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_eye_001_line, null)
-        baseLineImage?.setImageDrawable(lineVD)
-
-        baseLineImage = preview?.findViewById<ConstraintLayout>(R.id.mouth_layer)?.findViewById(R.id.base_line)
-        baseBackImage = preview?.findViewById<ConstraintLayout>(R.id.mouth_layer)?.findViewById(R.id.base_tint)
-        lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_001_line, null)
-        backVD = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_001_tint, null)
-        baseLineImage?.setImageDrawable(lineVD)
-        baseBackImage?.setImageDrawable(backVD)
-
-        baseLineImage = preview?.findViewById<ConstraintLayout>(R.id.bang_layer)?.findViewById(R.id.base_line)
-        baseBackImage = preview?.findViewById<ConstraintLayout>(R.id.bang_layer)?.findViewById(R.id.base_tint)
-        lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_bang_001_line, null)
-        backVD = VectorDrawableCompat.create(resources, R.drawable.ic_bang_001_tint, null)
-        baseLineImage?.setImageDrawable(lineVD)
-        baseBackImage?.setImageDrawable(backVD)
-
-        //BACK OR LINEの変更はImageView.onClickで切り替え
-        val backColorImage = view?.findViewById<ImageView>(R.id.tint_color_image)
-        val lineColorImage = view?.findViewById<ImageView>(R.id.line_color_image)
-        backColorImage?.setOnClickListener{ targetColorArea = BACK }
-        lineColorImage?.setOnClickListener{ targetColorArea = LINE }
-
-        val sbPlane = view?.findViewById<AbsHSBView>(R.id.sb_plane)
-        sbPlane?.setOnHSBChangeListener(object: AbsHSBView.OnHSBChangedListener{
-            override fun onHSBChanged(hue: Float, saturation: Float, brightness: Float) {
-                val color = Color.HSVToColor(floatArrayOf(hue, saturation, brightness))
-                //targetColorArea, パーツのImageViewにもIObserverを実装する（カスタムビュー化）
-                //→HueBarやSBPlaneなど、notify()を叩いたら全てに反映される。
-
-                if (targetColorArea == BACK){
-                    backColorImage?.setColorFilter(color)
-                    baseBackImage?.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
-                } else if (targetColorArea == LINE){
-                    lineColorImage?.setColorFilter(color)
-                    baseLineImage?.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
+                    val commentView = preview.findViewById<ImageView>(R.id.comment)
+                    commentView?.setImageBitmap(testBitmap)
                 }
 
-                mColorChangeSubject.notifyColorChange(hue, saturation, brightness)
+                //セットするImageViewを取得
+                baseLineImage = preview.findViewById<ConstraintLayout>(R.id.hair_b_layer)?.findViewById<ImageView>(R.id.base_line)
+                baseBackImage = preview.findViewById<ConstraintLayout>(R.id.hair_b_layer)?.findViewById<ImageView>(R.id.base_tint)
+                var lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_001_line, null)
+                var backVD = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_001_tint, null)
+                baseLineImage?.setImageDrawable(lineVD)
+                baseBackImage?.setImageDrawable(backVD)
+
+                baseLineImage = preview.findViewById<ConstraintLayout>(R.id.body_layer)?.findViewById(R.id.base_line)
+                baseBackImage = preview.findViewById<ConstraintLayout>(R.id.body_layer)?.findViewById(R.id.base_tint)
+                lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_body_001_line, null)
+                backVD = VectorDrawableCompat.create(resources, R.drawable.ic_body_001_tint, null)
+                baseLineImage?.setImageDrawable(lineVD)
+                baseBackImage?.setImageDrawable(backVD)
+
+                baseLineImage = preview.findViewById<ConstraintLayout>(R.id.eye_layer)?.findViewById(R.id.base_line)
+                lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_eye_001_line, null)
+                baseLineImage?.setImageDrawable(lineVD)
+
+                baseLineImage = preview.findViewById<ConstraintLayout>(R.id.mouth_layer)?.findViewById(R.id.base_line)
+                baseBackImage = preview.findViewById<ConstraintLayout>(R.id.mouth_layer)?.findViewById(R.id.base_tint)
+                lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_001_line, null)
+                backVD = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_001_tint, null)
+                baseLineImage?.setImageDrawable(lineVD)
+                baseBackImage?.setImageDrawable(backVD)
+
+                baseLineImage = preview.findViewById<ConstraintLayout>(R.id.bang_layer)?.findViewById(R.id.base_line)
+                baseBackImage = preview.findViewById<ConstraintLayout>(R.id.bang_layer)?.findViewById(R.id.base_tint)
+                lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_bang_001_line, null)
+                backVD = VectorDrawableCompat.create(resources, R.drawable.ic_bang_001_tint, null)
+                baseLineImage?.setImageDrawable(lineVD)
+                baseBackImage?.setImageDrawable(backVD)
             }
-        })
 
-        val hueBar = view?.findViewById<AbsHSBView>(R.id.hue_bar)
-        hueBar?.setOnHSBChangeListener(object: AbsHSBView.OnHSBChangedListener{
-            override fun onHSBChanged(hue: Float, saturation: Float, brightness: Float) {
-                mColorChangeSubject.notifyColorChange(hue, saturation, brightness)
+            //TINT OR LINEの変更はImageView.onClickで切り替え
+            val tintColorImage = view.findViewById<ObservableImageView>(R.id.tint_color_image)
+            val lineColorImage = view.findViewById<ObservableImageView>(R.id.line_color_image)
+            tintColorImage.setOnClickListener{ targetColorArea = TINT }
+            lineColorImage.setOnClickListener{ targetColorArea = LINE }
+
+            if (tintColorImage is IObserver){
+                tintColorImage.setObserver(object: IObserver{
+                    override fun colorUpdate(hue: Float, saturation: Float, brightness: Float) {
+                        if (targetColorArea == TINT){
+                            tintColorImage.setColorFilter(Color.HSVToColor(floatArrayOf(hue,saturation,brightness)))
+                        }
+                    }
+                })
+                mColorChangeSubject.attach(tintColorImage as IObserver)
             }
-        })
 
-        if (sbPlane is IObserver){
-            mColorChangeSubject.attach(sbPlane)
+            if (lineColorImage is IObserver){
+                lineColorImage.setObserver(object: IObserver{
+                    override fun colorUpdate(hue: Float, saturation: Float, brightness: Float) {
+                        if (targetColorArea == LINE){
+                            lineColorImage.setColorFilter(Color.HSVToColor(floatArrayOf(hue,saturation,brightness)))
+                        }
+                    }
+                })
+                mColorChangeSubject.attach(lineColorImage as IObserver)
+            }
+
+            val sbPlane = view.findViewById<AbsHSBView>(R.id.sb_plane)
+            sbPlane?.setOnHSBChangeListener(object: AbsHSBView.OnHSBChangedListener{
+                override fun onHSBChanged(hue: Float, saturation: Float, brightness: Float) {
+                    val color = Color.HSVToColor(floatArrayOf(hue, saturation, brightness))
+                    //targetColorArea, パーツのImageViewにもIObserverを実装する（カスタムビュー化）
+                    //→HueBarやSBPlaneなど、notify()を叩いたら全てに反映される。
+
+                    if (targetColorArea == TINT){
+                        tintColorImage?.setColorFilter(color)
+                        baseBackImage?.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
+                    } else if (targetColorArea == LINE){
+                        lineColorImage?.setColorFilter(color)
+                        baseLineImage?.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
+                    }
+
+                    mColorChangeSubject.notifyColorChange(hue, saturation, brightness)
+                }
+            })
+
+            val hueBar = view.findViewById<AbsHSBView>(R.id.hue_bar)
+            hueBar?.setOnHSBChangeListener(object: AbsHSBView.OnHSBChangedListener{
+                override fun onHSBChanged(hue: Float, saturation: Float, brightness: Float) {
+                    mColorChangeSubject.notifyColorChange(hue, saturation, brightness)
+                }
+            })
+
+            if (sbPlane is IObserver){
+                mColorChangeSubject.attach(sbPlane)
+            }
+
+            if (hueBar is IObserver){
+                mColorChangeSubject.attach(hueBar)
+            }
+
+            val redValue = view.findViewById<ObservableTextView>(R.id.red_value)
+            val greenValue = view.findViewById<ObservableTextView>(R.id.green_value)
+            val blueValue = view.findViewById<ObservableTextView>(R.id.blue_value)
+            val code = view.findViewById<ObservableTextView>(R.id.code)
+            redValue.setObserver(object: IObserver{
+                override fun colorUpdate(hue: Float, saturation: Float, brightness: Float) {
+                    val color = Color.HSVToColor(floatArrayOf(hue, saturation, brightness))
+                    redValue.text = Color.red(color).toString()
+                }
+            })
+            greenValue.setObserver(object: IObserver{
+                override fun colorUpdate(hue: Float, saturation: Float, brightness: Float) {
+                    val color = Color.HSVToColor(floatArrayOf(hue, saturation, brightness))
+                    greenValue.text = Color.green(color).toString()
+                }
+            })
+            blueValue.setObserver(object: IObserver{
+                override fun colorUpdate(hue: Float, saturation: Float, brightness: Float) {
+                    val color = Color.HSVToColor(floatArrayOf(hue, saturation, brightness))
+                    blueValue.text = Color.blue(color).toString()
+                }
+            })
+            code.setObserver(object: IObserver{
+                override fun colorUpdate(hue: Float, saturation: Float, brightness: Float) {
+                    val color = Color.HSVToColor(floatArrayOf(hue, saturation, brightness))
+                    code.text = Integer.toHexString(color)
+                }
+            })
+            mColorChangeSubject.attach(redValue)
+            mColorChangeSubject.attach(greenValue)
+            mColorChangeSubject.attach(blueValue)
+            mColorChangeSubject.attach(code)
+
+
+
         }
-
-        if (hueBar is IObserver){
-            mColorChangeSubject.attach(hueBar)
-        }
-
-        Log.d(this.javaClass.simpleName, hueBar?.width.toString())
 
         val builder = AlertDialog.Builder(activity)
         builder.setView(view)
@@ -144,6 +203,7 @@ class ColorPickerDialogFragment: DialogFragment() {
                     dialog.dismiss()
                 }
         return builder.create()
+
     }
 
     companion object {

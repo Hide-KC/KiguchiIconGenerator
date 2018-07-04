@@ -10,7 +10,7 @@ import android.view.MotionEvent
 /**
  * TODO: document your custom view class.
  */
-class SBPlaneView(context: Context, attrs: AttributeSet?) : AbsHSBView(context, attrs){
+class SBPlane(context: Context, attrs: AttributeSet?) : AbsHSBView(context, attrs){
     constructor(context: Context): this(context, null)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int): this(context, attrs)
 
@@ -20,10 +20,10 @@ class SBPlaneView(context: Context, attrs: AttributeSet?) : AbsHSBView(context, 
 
     init {
         //識別子のセット
-        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.SBPlaneView, 0, 0)
+        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.SBPlane, 0, 0)
         try{
             //xmlで静的にセットされている値の取出し
-            setHue(typedArray.getFloat(R.styleable.SBPlaneView_sb_plane_hue, 0f))
+            setHue(typedArray.getFloat(R.styleable.SBPlane_sb_plane_hue, 0f))
         } finally {
             typedArray.recycle()
         }
@@ -79,7 +79,7 @@ class SBPlaneView(context: Context, attrs: AttributeSet?) : AbsHSBView(context, 
                 else -> setBrightness(1 - y)
             }
         }
-        Log.d(this.javaClass.simpleName, "Hue = " + getHue())
+//        Log.d(this.javaClass.simpleName, "Hue = " + getHue())
         mListener?.onHSBChanged(getHue(), getSaturation(), getBrightness())
         return true
     }

@@ -19,7 +19,7 @@ class PartsGridAdapter(context: Context) : ArrayAdapter<PartsDTO>(context, andro
 
         val holder = cv.tag as PartsViewHolder
         val item = getItem(position)
-        val resString = item.partsResString
+        val resString = item.resString
 
         val builder = StringBuilder()
         builder.append(resString).append(TINT)
