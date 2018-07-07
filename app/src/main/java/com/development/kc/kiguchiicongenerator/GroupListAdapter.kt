@@ -22,7 +22,7 @@ class GroupListAdapter(context: Context) : ArrayAdapter<Int> (context, android.R
     }
 
 
-    inner class ItemViewHolder(view: View){
+    private class ItemViewHolder(view: View){
         val lineView = view.findViewById<ImageView>(R.id.base_line)
     }
 

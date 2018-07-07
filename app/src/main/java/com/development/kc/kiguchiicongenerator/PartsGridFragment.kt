@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.GridView
+import java.lang.reflect.Modifier
 
 class PartsGridFragment: AbsFragment() {
     interface OnPartsClickListener{
@@ -32,13 +33,34 @@ class PartsGridFragment: AbsFragment() {
             partsClickListener?.onPartsClicked(adapter.getItem(i).resString)
         }
 
-        if (this.context != null){
-            val partsGridAdapter = PartsGridAdapter(this.context!!)
+        val args = arguments
+        var group = ""
+        if (args != null){
+            group = args.getString("group", "")
+        }
+
+        if (context != null && group != ""){
+            val partsGridAdapter = PartsGridAdapter(context!!)
             val resNames = ArrayList<String>()
-            resNames.add(subStringResName(resources.getResourceEntryName(R.drawable.ic_backhair_001_line), 4))
-            resNames.add(subStringResName(resources.getResourceEntryName(R.drawable.ic_bang_001_line), 4))
-            resNames.add(subStringResName(resources.getResourceEntryName(R.drawable.ic_bang_002_line), 4))
-            resNames.add(subStringResName(resources.getResourceEntryName(R.drawable.ic_mouth_001_line), 4))
+            //リフレクションによりDrawableId一覧を生成
+            val resIds = R.drawable::class.java.fields
+                    .filter {
+                        Modifier.isPublic(it.modifiers)
+                        && Modifier.isStatic(it.modifiers)
+                        && Modifier.isFinal(it.modifiers)
+                    }
+                    .map {
+                        it.getInt(null)
+                    }
+
+            for (id in resIds){
+                //TODO tintしかないパターン未対応
+                val name = resources.getResourceEntryName(id)
+                if (name.contains(group) && name.contains("line")){
+                    resNames.add(name)
+                }
+            }
+
             for (name in resNames){
                 partsGridAdapter.add(PartsDTO(name, Color.YELLOW, Color.parseColor("#ff555555")))
             }
@@ -54,16 +76,11 @@ class PartsGridFragment: AbsFragment() {
             val args = Bundle()
             val fragment = PartsGridFragment()
             fragment.arguments = args
+            args.putString("group", targetGroupResStr)
             fragment.setTargetFragment(targetFragment, 0)
             return fragment
         }
     }
 
-    private fun subStringResName(resName: String, cutLength: Int): String{
-        return if (resName.length - cutLength <= 0){
-            ""
-        } else {
-            resName.substring(0, resName.length - cutLength)
-        }
-    }
+
 }

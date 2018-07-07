@@ -2,10 +2,10 @@ package com.development.kc.kiguchiicongenerator
 
 import android.content.Intent
 import android.graphics.*
+import android.graphics.drawable.Drawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
-import android.support.annotation.Nullable
 import android.support.constraint.ConstraintLayout
 import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.content.ContextCompat
@@ -20,9 +20,21 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import kotlin.math.roundToInt
+import android.os.Build
+import android.preference.PreferenceManager
 
 
 class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener, ControllerFragment.OnKeyClickedListener {
+    private val layerMap = mapOf(
+            "backhair" to R.id.hair_b_layer,
+            "bang" to R.id.bang_layer,
+            "body" to R.id.body_layer,
+            "face" to R.id.face_layer,
+            "eye" to R.id.eye_layer,
+            "mouth" to R.id.mouth_layer,
+            "hair-acc" to R.id.hair_acc_layer,
+            "face-acc" to R.id.face_acc_layer
+    )
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -33,13 +45,21 @@ class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener
     private val PARTS_GRID = "parts_grid"
     private val FRAGMENT_STATE = "fragment_state"
 
-    private var swapFragmentState = ""
-    private var selectedGroup = "" //TODO String型の管理で本当に良いの？
+    private var swapFragmentState = PARTS_GRID
 
     override fun onPartsClicked(resStr: String) {
-        //resStr: Group_Parts_PartsID_
-        val arr = resStr.split('_')
+        //resStr: ic_[Group]_[Parts]_[PartsID]_tint/line
         Toast.makeText(this, resStr, Toast.LENGTH_SHORT).show()
+        val tintResName = resStr.replace("line", "tint")
+        val lineResName = resStr.replace("tint", "line")
+        val tintDrwId = resources.getIdentifier(tintResName, "drawable", this.packageName)
+        val lineDrwId = resources.getIdentifier(lineResName, "drawable", this.packageName)
+
+        val arr = resStr.split('_')
+        val layerId = layerMap[arr[1]]
+        if (layerId != null){
+            setParts(layerId, getDrawableResource(lineDrwId), Color.DKGRAY, getDrawableResource(tintDrwId), Color.LTGRAY)
+        }
     }
 
     override fun onKeyClicked(keyDistraction: ControllerFragment.KeyDistraction) {
@@ -51,7 +71,6 @@ class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener
         if (outState is Bundle){
             outState.putString(FRAGMENT_STATE, swapFragmentState)
         }
-
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
@@ -66,45 +85,53 @@ class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        val commentLayer = findViewById<ConstraintLayout>(R.id.comment_layer)
-        val commentHeight = commentLayer.height
-        val textSize = (commentHeight * 0.1).roundToInt()
-        val teststring = "せりふ！"
-        val testBitmap = DrawableController.textToBitmap(this, getMyColor(R.color.black), teststring, textSize)
-
-        val commentView = findViewById<ImageView>(R.id.comment)
-        commentView.setImageBitmap(testBitmap)
+        if (hasFocus){
+            //TODO DefaultPreferenceから引き出す？どう選択値を保存する？
 
 
-        //テストコード
-        /*ここから１セット*/
-        var backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_001_tint, null)
-        var lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_001_line, null)
-        setParts(R.id.hair_b_layer, lineDrawable, null, backDrawable, null)
-        /*ここまで１セット*/
+            val commentLayer = findViewById<ConstraintLayout>(R.id.comment_layer)
+            val commentHeight = commentLayer.height
+            val textSize = (commentHeight * 0.1).roundToInt()
+            val teststring = "せりふ！"
+            val testBitmap = DrawableController.textToBitmap(this, getMyColor(R.color.black), teststring, textSize)
 
-        /*ここから１セット*/
-        backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_body_001_tint, null)
-        lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_body_001_line, null)
-        setParts(R.id.body_layer, lineDrawable, null, backDrawable, null)
-        /*ここまで１セット*/
+            val commentView = findViewById<ImageView>(R.id.comment)
+            commentView.setImageBitmap(testBitmap)
 
-        /*ここから１セット*/
-        lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_eye_001_line, null)
-        setParts(R.id.eye_layer, lineDrawable, null, null, null)
-        /*ここまで１セット*/
 
-        backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_001_tint, null)
-        lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_001_line, null)
-        setParts(R.id.mouth_layer, lineDrawable, null, backDrawable, null)
 
-        backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_bang_001_tint, null)
-        lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_bang_001_line, null)
-        setParts(R.id.bang_layer, lineDrawable, null, backDrawable, null)
-        //テストここまで
 
-        val backGround = findViewById<ConstraintLayout>(R.id.canvas_background)
-        backGround.background.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP)
+
+            //テストコード
+            /*ここから１セット*/
+            var backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_001_tint, null)
+            var lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_001_line, null)
+            setParts(R.id.hair_b_layer, lineDrawable, null, backDrawable, null)
+            /*ここまで１セット*/
+
+            /*ここから１セット*/
+            backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_body_001_tint, null)
+            lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_body_001_line, null)
+            setParts(R.id.body_layer, lineDrawable, null, backDrawable, null)
+            /*ここまで１セット*/
+
+            /*ここから１セット*/
+            lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_eye_001_line, null)
+            setParts(R.id.eye_layer, lineDrawable, null, null, null)
+            /*ここまで１セット*/
+
+            backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_001_tint, null)
+            lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_001_line, null)
+            setParts(R.id.mouth_layer, lineDrawable, null, backDrawable, null)
+
+            backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_bang_001_tint, null)
+            lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_bang_001_line, null)
+            setParts(R.id.bang_layer, lineDrawable, null, backDrawable, null)
+            //テストここまで
+
+            val backGround = findViewById<ConstraintLayout>(R.id.canvas_background)
+            backGround.background.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -163,9 +190,20 @@ class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener
         groupAdapter.add(R.drawable.ic_bang_001_tint)
         groupAdapter.add(R.drawable.ic_body_001_tint)
         groupAdapter.add(R.drawable.ic_eye_001_line)
+        groupAdapter.add(R.drawable.ic_mouth_001_line)
         groupList.adapter = groupAdapter
         groupList.setOnItemClickListener { adapterView: AdapterView<*>, view1: View, i: Int, l: Long ->
-
+            val resId = adapterView.adapter.getItem(i) as Int //R.drawable.xxx
+            val resArray = resources.getResourceEntryName(resId).split('_')
+            val group = resArray[1]
+            val defaultPref = PreferenceManager.getDefaultSharedPreferences(this)
+            //selectedGroupの保存
+            defaultPref.edit().putString("group", group).apply()
+            val transaction = supportFragmentManager.beginTransaction()
+            if (swapFragmentState == PARTS_GRID){
+                transaction.replace(R.id.swap_layout, PartsGridFragment.newInstance(null, group))
+                transaction.commit()
+            }
         }
         //ColorPickerDialogの呼出し
         val iv = findViewById<ImageView>(R.id.imageView)
@@ -175,17 +213,25 @@ class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener
             dialog.show(this.supportFragmentManager, this.javaClass.simpleName)
         }
 
+        val pref = PreferenceManager.getDefaultSharedPreferences(this)
+        val selectedGroup = pref.getString("group", "")
         val fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.swap_layout, PartsGridFragment.newInstance(null, selectedGroup))
+        if (selectedGroup == ""){
+            fragmentTransaction.replace(R.id.swap_layout, PartsGridFragment.newInstance(null, "backhair"))
+        } else {
+            fragmentTransaction.replace(R.id.swap_layout, PartsGridFragment.newInstance(null, selectedGroup))
+        }
         fragmentTransaction.commit()
 
         val swapBtn = findViewById<Button>(R.id.swap_button)
         swapBtn.setOnClickListener{v: View ->
+            val group = pref.getString("group", "backhair")
+
             val transaction = supportFragmentManager.beginTransaction()
             if (swapFragmentState == PARTS_GRID || swapFragmentState == ""){
                 val f = supportFragmentManager.findFragmentByTag(CONTROLLER)
                 if (f == null){
-                    transaction.replace(R.id.swap_layout, ControllerFragment.newInstance(null, 0), CONTROLLER)
+                    transaction.replace(R.id.swap_layout, ControllerFragment.newInstance(null, group), CONTROLLER)
                 } else {
                     transaction.attach(f)
                 }
@@ -194,7 +240,7 @@ class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener
             } else if (swapFragmentState == CONTROLLER){
                 val f = supportFragmentManager.findFragmentByTag(PARTS_GRID)
                 if (f == null){
-                    transaction.replace(R.id.swap_layout, PartsGridFragment.newInstance(null, selectedGroup))
+                    transaction.replace(R.id.swap_layout, PartsGridFragment.newInstance(null, group), PARTS_GRID)
                 } else {
                     transaction.attach(f)
                 }
@@ -210,7 +256,7 @@ class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener
         return ContextCompat.getColor(this, id)
     }
 
-    private fun setParts(layerId: Int, @Nullable lineDrawable: VectorDrawableCompat?, @Nullable lineColor: Int?, @Nullable backDrawable: VectorDrawableCompat?, @Nullable backColor: Int?){
+    private fun setParts(layerId: Int, lineDrawable: Drawable?, lineColor: Int?, backDrawable: Drawable?, backColor: Int?){
         if (lineColor is Int && lineDrawable is VectorDrawableCompat){
             lineDrawable.setColorFilter(lineColor, PorterDuff.Mode.SRC_ATOP)
         }
@@ -226,5 +272,20 @@ class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener
         lineImg.setImageDrawable(lineDrawable)
     }
 
+    private fun subStringResName(resName: String, cutLength: Int): String{
+        return if (resName.length - cutLength <= 0){
+            ""
+        } else {
+            resName.substring(0, resName.length - cutLength)
+        }
+    }
 
+    @SuppressWarnings("deprecation")
+    private fun getDrawableResource(id: Int): Drawable? {
+        return when {
+            id == 0 -> null
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> resources.getDrawable(id, null)
+            else -> resources.getDrawable(id)
+        }
+    }
 }

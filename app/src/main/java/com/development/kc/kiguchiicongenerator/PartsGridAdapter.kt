@@ -21,27 +21,24 @@ class PartsGridAdapter(context: Context) : ArrayAdapter<PartsDTO>(context, andro
         val item = getItem(position)
         val resString = item.resString
 
-        val builder = StringBuilder()
-        builder.append(resString).append(TINT)
-        val tintResID = context.resources.getIdentifier(builder.toString(), DRAWABLE, context.packageName)
+        val tintResName = resString.replace("line", "tint")
+        val tintResID = context.resources.getIdentifier(tintResName, DRAWABLE, context.packageName)
         holder.tintView.setImageResource(tintResID)
         if (item.tintColor != null){
             holder.tintView.setColorFilter(item.tintColor)
         }
-        builder.setLength(0)
 
-        builder.append(resString).append(LINE)
-        val lineResID = context.resources.getIdentifier(builder.toString(), DRAWABLE, context.packageName)
+        val lineResName = resString.replace("tint", "line")
+        val lineResID = context.resources.getIdentifier(lineResName, DRAWABLE, context.packageName)
         holder.lineView.setImageResource(lineResID)
         if (item.lineColor != null){
             holder.lineView.setColorFilter(item.lineColor)
         }
-        builder.setLength(0)
 
         return cv
     }
 
-    inner class PartsViewHolder(view: View){
+    private class PartsViewHolder(view: View){
         val tintView = view.findViewById<ImageView>(R.id.base_tint)
         val lineView = view.findViewById<ImageView>(R.id.base_line)
     }

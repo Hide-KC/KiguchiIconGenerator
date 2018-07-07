@@ -34,10 +34,12 @@ class ControllerFragment: AbsFragment() {
 
 
     companion object {
-        fun newInstance(targetFragment: Fragment?, targetPartsId: Int): ControllerFragment{
+        fun newInstance(targetFragment: Fragment?, targetGroupResStr: String): ControllerFragment{
             val args = Bundle()
+            args.putString("group", targetGroupResStr)
             val fragment = ControllerFragment()
             fragment.arguments = args
+
             fragment.setTargetFragment(targetFragment, 0)
             return fragment
         }

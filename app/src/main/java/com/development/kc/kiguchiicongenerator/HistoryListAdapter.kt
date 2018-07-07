@@ -19,7 +19,7 @@ class HistoryListAdapter(context: Context) : ArrayAdapter<HistoryDTO>(context, a
         return cv
     }
 
-    inner class ItemViewHolder(view: View){
+    private class ItemViewHolder(view: View){
 
     }
 }

@@ -1,7 +1,7 @@
 package com.development.kc.kiguchiicongenerator
 
 data class PartsDTO(
-        //「Group名_Parts番号_」まで格納
+        //Group_Parts_PartsID_tint/line
         val resString: String,
         val tintColor: Int?,
         val lineColor: Int?,
