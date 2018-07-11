@@ -15,5 +15,24 @@
 
     <!--デフォルトカラー-->
 
+    <!--<declare-styleable name="PartsDefaultColorTheme">-->
+        <!--<attr name="partsDefaultColorTheme" format="reference"/>-->
+    <!--</declare-styleable>-->
+
+    <!--<style name="Theme" parent="">-->
+        <!--<item name="line_default_color">@color/black</item>-->
+        <!--<item name="hair_default_color">@color/dkgly</item>-->
+        <!--<item name="body_default_color">@color/pale_orange</item>-->
+        <!--<item name="face_default_color">@color/pale_orange</item>-->
+        <!--<item name="eye_default_tint_color">@color/black</item>-->
+        <!--<item name="mouth_default_tint_color">@color/pink</item>-->
+    <!--</style>-->
+
+    <!--デフォルトパーツ-->
+    <!--<style name="PartsDefaultTheme">-->
+        <!--<item name="backhair_default">@drawable/ic_backhair_001_line</item>-->
+        <!--<item name="backhair_tint_color">@android:color/DKGLY</item>-->
+        <!--……-->
+    <!--</style>-->
 
 </resources>

@@ -8,12 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 
 class ControllerFragment: AbsFragment() {
-    enum class KeyDistraction {
+    enum class KeyDirection {
         KEY_UP, KEY_RIGHT, KEY_DOWN, KEY_LEFT
     }
 
     interface OnKeyClickedListener{
-        fun onKeyClicked(keyDistraction: KeyDistraction)
+        fun onKeyClicked(keyDirection: KeyDirection)
     }
 
     private var onKeyClickedListener: OnKeyClickedListener? = null

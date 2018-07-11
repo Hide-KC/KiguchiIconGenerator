@@ -19,66 +19,57 @@ import android.widget.*
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
-import kotlin.math.roundToInt
 import android.os.Build
 import android.preference.PreferenceManager
 
 
-class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener, ControllerFragment.OnKeyClickedListener {
-    private val layerMap = mapOf(
-            "backhair" to R.id.hair_b_layer,
-            "bang" to R.id.bang_layer,
-            "body" to R.id.body_layer,
-            "face" to R.id.face_layer,
-            "eye" to R.id.eye_layer,
-            "mouth" to R.id.mouth_layer,
-            "hair-acc" to R.id.hair_acc_layer,
-            "face-acc" to R.id.face_acc_layer
-    )
+class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener, ControllerFragment.OnKeyClickedListener, IconViewFragment.OnIconUpdateListener {
+    private val FRAGMENT_STATE = "fragment_state"
+    private var swapFragmentState = FragmentTag.PARTS_GRID
 
+    enum class FragmentTag(tag: String){
+        CONTROLLER("controller"), PARTS_GRID("parts_grid"), ICON_VIEW("icon_view")
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    private val CONTROLLER = "controller"
-    private val PARTS_GRID = "parts_grid"
-    private val FRAGMENT_STATE = "fragment_state"
-
-    private var swapFragmentState = PARTS_GRID
-
-    override fun onPartsClicked(resStr: String) {
-        //resStr: ic_[Group]_[Parts]_[PartsID]_tint/line
-        Toast.makeText(this, resStr, Toast.LENGTH_SHORT).show()
-        val tintResName = resStr.replace("line", "tint")
-        val lineResName = resStr.replace("tint", "line")
-        val tintDrwId = resources.getIdentifier(tintResName, "drawable", this.packageName)
-        val lineDrwId = resources.getIdentifier(lineResName, "drawable", this.packageName)
-
-        val arr = resStr.split('_')
-        val layerId = layerMap[arr[1]]
-        if (layerId != null){
-            setParts(layerId, getDrawableResource(lineDrwId), Color.DKGRAY, getDrawableResource(tintDrwId), Color.LTGRAY)
+    override fun iconUpdate(group: IconViewFragment.GroupEnum, partsId: Int, tintColor: Int, lineColor: Int) {
+        val fragment = supportFragmentManager.findFragmentByTag(FragmentTag.ICON_VIEW.name)
+        if (fragment is IconViewFragment){
+            fragment.iconUpdate(group, partsId, tintColor, lineColor)
         }
     }
 
-    override fun onKeyClicked(keyDistraction: ControllerFragment.KeyDistraction) {
+    override fun onPartsClicked(resStr: String) {
+        //resStr: ic_[Group]_[PartsID]_tint/line
+        Toast.makeText(this, resStr, Toast.LENGTH_SHORT).show()
+
+        val arr = resStr.split('_')
+        val group = IconViewFragment.GroupEnum.getTypeByValue(arr[1])
+        val partsId = arr[2].toInt()
+        //TODO 色の取得方法どうするかー！？
+        iconUpdate(group, partsId, getMyColor(R.color.pale_orange), getMyColor(R.color.black))
+    }
+
+    override fun onKeyClicked(keyDirection: ControllerFragment.KeyDirection) {
 
     }
 
     override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
         super.onSaveInstanceState(outState, outPersistentState)
         if (outState is Bundle){
-            outState.putString(FRAGMENT_STATE, swapFragmentState)
+            outState.putString(FRAGMENT_STATE, swapFragmentState.name)
         }
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
         if (savedInstanceState is Bundle){
-            val state = savedInstanceState[FRAGMENT_STATE]
-            if (state != null){
-                swapFragmentState = state.toString()
+            val state = savedInstanceState[FRAGMENT_STATE].toString()
+            if (state != ""){
+                swapFragmentState = FragmentTag.valueOf(state)
             }
         }
     }
@@ -89,48 +80,48 @@ class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener
             //TODO DefaultPreferenceから引き出す？どう選択値を保存する？
 
 
-            val commentLayer = findViewById<ConstraintLayout>(R.id.comment_layer)
-            val commentHeight = commentLayer.height
-            val textSize = (commentHeight * 0.1).roundToInt()
-            val teststring = "せりふ！"
-            val testBitmap = DrawableController.textToBitmap(this, getMyColor(R.color.black), teststring, textSize)
-
-            val commentView = findViewById<ImageView>(R.id.comment)
-            commentView.setImageBitmap(testBitmap)
-
-
-
-
-
-            //テストコード
-            /*ここから１セット*/
-            var backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_001_tint, null)
-            var lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_001_line, null)
-            setParts(R.id.hair_b_layer, lineDrawable, null, backDrawable, null)
-            /*ここまで１セット*/
-
-            /*ここから１セット*/
-            backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_body_001_tint, null)
-            lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_body_001_line, null)
-            setParts(R.id.body_layer, lineDrawable, null, backDrawable, null)
-            /*ここまで１セット*/
-
-            /*ここから１セット*/
-            lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_eye_001_line, null)
-            setParts(R.id.eye_layer, lineDrawable, null, null, null)
-            /*ここまで１セット*/
-
-            backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_001_tint, null)
-            lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_001_line, null)
-            setParts(R.id.mouth_layer, lineDrawable, null, backDrawable, null)
-
-            backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_bang_001_tint, null)
-            lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_bang_001_line, null)
-            setParts(R.id.bang_layer, lineDrawable, null, backDrawable, null)
-            //テストここまで
-
-            val backGround = findViewById<ConstraintLayout>(R.id.canvas_background)
-            backGround.background.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP)
+//            val commentLayer = findViewById<ConstraintLayout>(R.id.comment_layer)
+//            val commentHeight = commentLayer.height
+//            val textSize = (commentHeight * 0.1).roundToInt()
+//            val teststring = "せりふ！"
+//            val testBitmap = DrawableController.textToBitmap(this, getMyColor(R.color.black), teststring, textSize)
+//
+//            val commentView = findViewById<ImageView>(R.id.comment)
+//            commentView.setImageBitmap(testBitmap)
+//
+//
+//
+//
+//
+//            //テストコード
+//            /*ここから１セット*/
+//            var backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_001_tint, null)
+//            var lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_001_line, null)
+//            updateIconView(R.id.backhair_layer, lineDrawable, null, backDrawable, null)
+//            /*ここまで１セット*/
+//
+//            /*ここから１セット*/
+//            backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_body_001_tint, null)
+//            lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_body_001_line, null)
+//            updateIconView(R.id.body_layer, lineDrawable, null, backDrawable, null)
+//            /*ここまで１セット*/
+//
+//            /*ここから１セット*/
+//            lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_eye_001_line, null)
+//            updateIconView(R.id.eye_layer, lineDrawable, null, null, null)
+//            /*ここまで１セット*/
+//
+//            backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_001_tint, null)
+//            lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_001_line, null)
+//            updateIconView(R.id.mouth_layer, lineDrawable, null, backDrawable, null)
+//
+//            backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_bang_001_tint, null)
+//            lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_bang_001_line, null)
+//            updateIconView(R.id.bang_layer, lineDrawable, null, backDrawable, null)
+//            //テストここまで
+//
+//            val backGround = findViewById<ConstraintLayout>(R.id.canvas_background)
+//            backGround.background.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP)
         }
     }
 
@@ -200,11 +191,12 @@ class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener
             //selectedGroupの保存
             defaultPref.edit().putString("group", group).apply()
             val transaction = supportFragmentManager.beginTransaction()
-            if (swapFragmentState == PARTS_GRID){
+            if (swapFragmentState == FragmentTag.PARTS_GRID){
                 transaction.replace(R.id.swap_layout, PartsGridFragment.newInstance(null, group))
                 transaction.commit()
             }
         }
+
         //ColorPickerDialogの呼出し
         val iv = findViewById<ImageView>(R.id.imageView)
         iv.setOnClickListener{ v: View ->
@@ -216,11 +208,28 @@ class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener
         val pref = PreferenceManager.getDefaultSharedPreferences(this)
         val selectedGroup = pref.getString("group", "")
         val fragmentTransaction = supportFragmentManager.beginTransaction()
+        //PartsGridの生成
         if (selectedGroup == ""){
             fragmentTransaction.replace(R.id.swap_layout, PartsGridFragment.newInstance(null, "backhair"))
         } else {
             fragmentTransaction.replace(R.id.swap_layout, PartsGridFragment.newInstance(null, selectedGroup))
         }
+        //IconViewの生成
+        val icon = IconDTO().also {
+            it.backHairID = 1
+            it.bangID = 1
+            it.bodyID = 1
+            it.eyeID = 1
+            it.mouthID = 1
+            it.hairTintColor = Color.LTGRAY
+            it.hairLineColor = Color.DKGRAY
+            it.bodyTintColor = getMyColor(R.color.pale_orange)
+            it.bodyLineColor = Color.DKGRAY
+            it.eyeLineColor = Color.DKGRAY
+            it.mouthTintColor = getMyColor(R.color.pink)
+            it.mouthLineColor = Color.DKGRAY
+        }
+        fragmentTransaction.replace(R.id.canvas_layout, IconViewFragment.newInstance(null,icon), FragmentTag.ICON_VIEW.name)
         fragmentTransaction.commit()
 
         val swapBtn = findViewById<Button>(R.id.swap_button)
@@ -228,24 +237,24 @@ class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener
             val group = pref.getString("group", "backhair")
 
             val transaction = supportFragmentManager.beginTransaction()
-            if (swapFragmentState == PARTS_GRID || swapFragmentState == ""){
-                val f = supportFragmentManager.findFragmentByTag(CONTROLLER)
+            if (swapFragmentState == FragmentTag.PARTS_GRID){
+                val f = supportFragmentManager.findFragmentByTag(FragmentTag.CONTROLLER.name)
                 if (f == null){
-                    transaction.replace(R.id.swap_layout, ControllerFragment.newInstance(null, group), CONTROLLER)
+                    transaction.replace(R.id.swap_layout, ControllerFragment.newInstance(null, group), FragmentTag.CONTROLLER.name)
                 } else {
                     transaction.attach(f)
                 }
                 transaction.commit()
-                swapFragmentState = CONTROLLER
-            } else if (swapFragmentState == CONTROLLER){
-                val f = supportFragmentManager.findFragmentByTag(PARTS_GRID)
+                swapFragmentState = FragmentTag.CONTROLLER
+            } else if (swapFragmentState == FragmentTag.CONTROLLER){
+                val f = supportFragmentManager.findFragmentByTag(FragmentTag.PARTS_GRID.name)
                 if (f == null){
-                    transaction.replace(R.id.swap_layout, PartsGridFragment.newInstance(null, group), PARTS_GRID)
+                    transaction.replace(R.id.swap_layout, PartsGridFragment.newInstance(null, group), FragmentTag.PARTS_GRID.name)
                 } else {
                     transaction.attach(f)
                 }
                 transaction.commit()
-                swapFragmentState = PARTS_GRID
+                swapFragmentState = FragmentTag.PARTS_GRID
             }
         }
 
@@ -256,6 +265,7 @@ class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener
         return ContextCompat.getColor(this, id)
     }
 
+    //アイコン表示部がFragment化されたため、書換が必要
     private fun setParts(layerId: Int, lineDrawable: Drawable?, lineColor: Int?, backDrawable: Drawable?, backColor: Int?){
         if (lineColor is Int && lineDrawable is VectorDrawableCompat){
             lineDrawable.setColorFilter(lineColor, PorterDuff.Mode.SRC_ATOP)

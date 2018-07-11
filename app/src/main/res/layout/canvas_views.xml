@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <include
-            android:id="@+id/hair_b_layer"
+            android:id="@+id/backhair_layer"
             layout="@layout/layer_base"
             android:layout_width="0dp"
             android:layout_height="0dp"

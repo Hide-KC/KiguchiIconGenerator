@@ -1,7 +1,6 @@
 package com.development.kc.kiguchiicongenerator
 
 import android.content.Context
-import android.support.constraint.Guideline
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,7 @@ class GroupListAdapter(context: Context) : ArrayAdapter<Int> (context, android.R
     private val inflater = LayoutInflater.from(context)
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val cv = convertView?: inflater.inflate(R.layout.parts_base, null).apply {
+        val cv = convertView?: inflater.inflate(R.layout.icon_views, null).apply {
             tag = ItemViewHolder(this)
         }
 

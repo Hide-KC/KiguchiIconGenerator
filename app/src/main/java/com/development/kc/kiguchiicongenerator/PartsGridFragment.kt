@@ -62,6 +62,7 @@ class PartsGridFragment: AbsFragment() {
             }
 
             for (name in resNames){
+                //TODO tint_color, line_colorをどう設定する？
                 partsGridAdapter.add(PartsDTO(name, Color.YELLOW, Color.parseColor("#ff555555")))
             }
 

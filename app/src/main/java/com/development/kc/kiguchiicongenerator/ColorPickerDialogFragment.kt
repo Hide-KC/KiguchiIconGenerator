@@ -64,8 +64,8 @@ class ColorPickerDialogFragment: DialogFragment() {
                 }
 
                 //セットするImageViewを取得
-                baseLineImage = preview.findViewById<ConstraintLayout>(R.id.hair_b_layer)?.findViewById<ImageView>(R.id.base_line)
-                baseBackImage = preview.findViewById<ConstraintLayout>(R.id.hair_b_layer)?.findViewById<ImageView>(R.id.base_tint)
+                baseLineImage = preview.findViewById<ConstraintLayout>(R.id.backhair_layer)?.findViewById<ImageView>(R.id.base_line)
+                baseBackImage = preview.findViewById<ConstraintLayout>(R.id.backhair_layer)?.findViewById<ImageView>(R.id.base_tint)
                 var lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_001_line, null)
                 var backVD = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_001_tint, null)
                 baseLineImage?.setImageDrawable(lineVD)
