@@ -11,9 +11,8 @@ class GroupListAdapter(context: Context) : ArrayAdapter<Int> (context, android.R
     private val inflater = LayoutInflater.from(context)
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val cv = convertView?: inflater.inflate(R.layout.icon_views, null).apply {
-            tag = ItemViewHolder(this)
-        }
+        val cv = convertView?: inflater.inflate(R.layout.icon_views, null)
+        cv.tag = ItemViewHolder(cv)
 
         val holder = cv.tag as ItemViewHolder
         holder.lineView.setImageResource(getItem(position))

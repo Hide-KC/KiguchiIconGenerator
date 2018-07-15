@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    override fun iconUpdate(group: IconViewFragment.GroupEnum, partsId: Int, tintColor: Int, lineColor: Int) {
+    override fun iconUpdate(group: IconLayout.GroupEnum, partsId: Int, tintColor: Int, lineColor: Int) {
         val fragment = supportFragmentManager.findFragmentByTag(FragmentTag.ICON_VIEW.name)
         if (fragment is IconViewFragment){
             fragment.iconUpdate(group, partsId, tintColor, lineColor)
@@ -47,10 +47,10 @@ class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener
         Toast.makeText(this, resStr, Toast.LENGTH_SHORT).show()
 
         val arr = resStr.split('_')
-        val group = IconViewFragment.GroupEnum.getTypeByValue(arr[1])
+        val group = IconLayout.GroupEnum.getTypeByValue(arr[1])
         val partsId = arr[2].toInt()
         //TODO 色の取得方法どうするかー！？
-        iconUpdate(group, partsId, getMyColor(R.color.pale_orange), getMyColor(R.color.black))
+        iconUpdate(group, partsId, getMyColor(R.color.yellow), getMyColor(R.color.black))
     }
 
     override fun onKeyClicked(keyDirection: ControllerFragment.KeyDirection) {
@@ -71,57 +71,6 @@ class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener
             if (state != ""){
                 swapFragmentState = FragmentTag.valueOf(state)
             }
-        }
-    }
-
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        if (hasFocus){
-            //TODO DefaultPreferenceから引き出す？どう選択値を保存する？
-
-
-//            val commentLayer = findViewById<ConstraintLayout>(R.id.comment_layer)
-//            val commentHeight = commentLayer.height
-//            val textSize = (commentHeight * 0.1).roundToInt()
-//            val teststring = "せりふ！"
-//            val testBitmap = DrawableController.textToBitmap(this, getMyColor(R.color.black), teststring, textSize)
-//
-//            val commentView = findViewById<ImageView>(R.id.comment)
-//            commentView.setImageBitmap(testBitmap)
-//
-//
-//
-//
-//
-//            //テストコード
-//            /*ここから１セット*/
-//            var backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_001_tint, null)
-//            var lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_001_line, null)
-//            updateIconView(R.id.backhair_layer, lineDrawable, null, backDrawable, null)
-//            /*ここまで１セット*/
-//
-//            /*ここから１セット*/
-//            backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_body_001_tint, null)
-//            lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_body_001_line, null)
-//            updateIconView(R.id.body_layer, lineDrawable, null, backDrawable, null)
-//            /*ここまで１セット*/
-//
-//            /*ここから１セット*/
-//            lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_eye_001_line, null)
-//            updateIconView(R.id.eye_layer, lineDrawable, null, null, null)
-//            /*ここまで１セット*/
-//
-//            backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_001_tint, null)
-//            lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_001_line, null)
-//            updateIconView(R.id.mouth_layer, lineDrawable, null, backDrawable, null)
-//
-//            backDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_bang_001_tint, null)
-//            lineDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_bang_001_line, null)
-//            updateIconView(R.id.bang_layer, lineDrawable, null, backDrawable, null)
-//            //テストここまで
-//
-//            val backGround = findViewById<ConstraintLayout>(R.id.canvas_background)
-//            backGround.background.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP)
         }
     }
 
