@@ -2,6 +2,7 @@ package com.development.kc.kiguchiicongenerator
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.PorterDuff
 import android.os.Parcelable
 import android.support.constraint.ConstraintHelper
 import android.support.constraint.ConstraintLayout
@@ -95,12 +96,12 @@ class PartsBaseLayout(context: Context, attrs: AttributeSet?, val tag: IconLayou
         return super.onSaveInstanceState()
     }
 
-    fun setDrawable(groupEnum: IconLayout.GroupEnum, partsId: Int){
-
-    }
-
-    fun setColorFilter(groupEnum: IconLayout.GroupEnum, color: Int, baseType: IconLayout.BaseTypeEnum){
-
+    fun setColorFilter(baseType: IconLayout.BaseTypeEnum, color: Int){
+        val base = when(baseType){
+            IconLayout.BaseTypeEnum.TINT -> findViewById<ImageView>(baseTintId)
+            IconLayout.BaseTypeEnum.LINE -> findViewById<ImageView>(baseLineId)
+        }
+        base?.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
     }
 
     //1:1のためXYの倍率は同値

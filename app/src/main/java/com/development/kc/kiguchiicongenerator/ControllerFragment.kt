@@ -34,9 +34,9 @@ class ControllerFragment: AbsFragment() {
 
 
     companion object {
-        fun newInstance(targetFragment: Fragment?, targetGroupResStr: String): ControllerFragment{
+        fun newInstance(targetFragment: Fragment?, group: IconLayout.GroupEnum): ControllerFragment{
             val args = Bundle()
-            args.putString("group", targetGroupResStr)
+            args.putInt("group", group.ordinal)
             val fragment = ControllerFragment()
             fragment.arguments = args
 

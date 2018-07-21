@@ -1,42 +1,70 @@
 package com.development.kc.kiguchiicongenerator
 
 import android.graphics.Color
+import java.io.Serializable
 
-data class IconDTO(
-        //tint,line2リソースで１組なのでResStrで管理
-//        val backHairResStr: String = "",
-//        val bodyResStr: String = "",
-//        val faceResStr: String = "",
-//        val eyeResStr: String = "",
-//        val mouthResStr: String = "",
-//        val bangResStr: String = "",
-//        val hairAccResStr: String = "",
-//        val faceAccResStr: String = ""
+class IconDTO: Serializable{
+    private val partsMap = mutableMapOf<IconLayout.GroupEnum, Int>().also {
+        for (v in IconLayout.GroupEnum.values()){
+            it[v] = 1
+        }
+    }
 
-        var backHairID: Int = 0,
-        var bodyID: Int = 0,
-        var faceID: Int = 0,
-        var eyeID: Int = 0,
-        var mouthID: Int = 0,
-        var bangID: Int = 0,
-        var hairAccID: Int = 0,
-        var faceAccID: Int = 0,
-        var backGroundId: Int = 0, //ColorまたはDrawableID
+    private val lineColorMap = mutableMapOf<IconLayout.GroupEnum, Int>().also {
+        for (v in IconLayout.GroupEnum.values()){
+            it[v] = when(v){
+                IconLayout.GroupEnum.BACK_HAIR -> Color.DKGRAY
+                IconLayout.GroupEnum.BODY -> Color.DKGRAY
+                IconLayout.GroupEnum.FACE -> Color.DKGRAY
+                IconLayout.GroupEnum.EYE -> Color.DKGRAY
+                IconLayout.GroupEnum.MOUTH -> Color.DKGRAY
+                IconLayout.GroupEnum.BANG -> Color.DKGRAY
+                IconLayout.GroupEnum.HAIR_ACC -> Color.DKGRAY
+                IconLayout.GroupEnum.FACE_ACC -> Color.DKGRAY
+                IconLayout.GroupEnum.COMMENT -> Color.DKGRAY
+                else -> throw IllegalArgumentException("レイヤーを追加してください")
+            }
+        }
+    }
 
-        //hairColor: back/bang共通
-        var hairTintColor: Int = 0,
-        var hairLineColor: Int = 0,
-        var bodyTintColor: Int = 0,
-        var bodyLineColor: Int = 0,
-        var faceTintColor: Int = 0,
-        var faceLineColor: Int = 0,
-        var eyeTintColor: Int = 0,
-        var eyeLineColor: Int = 0,
-        var mouthTintColor: Int = 0,
-        var mouthLineColor: Int = 0,
-        var hairAccTintColor: Int = 0,
-        var hairAccLineColor: Int = 0,
-        var faceAccTintColor: Int = 0,
-        var faceAccLineColor: Int = 0
+    private val tintColorMap = mutableMapOf<IconLayout.GroupEnum, Int>().also {
+        for (v in IconLayout.GroupEnum.values()){
+            it[v] = when(v){
+                IconLayout.GroupEnum.BACK_HAIR -> Color.parseColor("#ff888888")
+                IconLayout.GroupEnum.BODY -> Color.parseColor("#fce2c4")
+                IconLayout.GroupEnum.FACE -> Color.parseColor("#fce2c4")
+                IconLayout.GroupEnum.EYE -> Color.parseColor("#ff444444")
+                IconLayout.GroupEnum.MOUTH -> Color.parseColor("#ffdf7163")
+                IconLayout.GroupEnum.BANG -> Color.parseColor("#ff888888")
+                IconLayout.GroupEnum.HAIR_ACC -> Color.parseColor("#e9dfe5")
+                IconLayout.GroupEnum.FACE_ACC -> Color.parseColor("#e9dfe5")
+                IconLayout.GroupEnum.COMMENT -> Color.DKGRAY
+                else -> throw IllegalArgumentException("レイヤーを追加してください")
+            }
+        }
+    }
 
-)
+    fun setPartsId(group: IconLayout.GroupEnum, partsId: Int){
+        partsMap[group] = partsId
+    }
+
+    fun setColorFilter(group: IconLayout.GroupEnum, baseTypeEnum: IconLayout.BaseTypeEnum, color: Int){
+        val map = when(baseTypeEnum){
+            IconLayout.BaseTypeEnum.TINT -> tintColorMap
+            IconLayout.BaseTypeEnum.LINE -> lineColorMap
+        }
+        map[group] = color
+    }
+
+    fun getPartsId(group: IconLayout.GroupEnum): Int{
+        return partsMap[group]!!
+    }
+
+    fun getColorFilter(group: IconLayout.GroupEnum, baseTypeEnum: IconLayout.BaseTypeEnum): Int {
+        val map = when(baseTypeEnum){
+            IconLayout.BaseTypeEnum.TINT -> tintColorMap
+            IconLayout.BaseTypeEnum.LINE -> lineColorMap
+        }
+        return map[group]!!
+    }
+}

@@ -1,5 +1,7 @@
 package com.development.kc.kiguchiicongenerator
 
+import android.app.Activity
+import android.app.DialogFragment
 import android.content.Intent
 import android.graphics.*
 import android.graphics.drawable.Drawable
@@ -26,6 +28,7 @@ import android.preference.PreferenceManager
 class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener, ControllerFragment.OnKeyClickedListener, IconViewFragment.OnIconUpdateListener {
     private val FRAGMENT_STATE = "fragment_state"
     private var swapFragmentState = FragmentTag.PARTS_GRID
+    private val icon = IconDTO()
 
     enum class FragmentTag(tag: String){
         CONTROLLER("controller"), PARTS_GRID("parts_grid"), ICON_VIEW("icon_view")
@@ -33,11 +36,30 @@ class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 100 && resultCode == Activity.RESULT_OK){
+            if (data != null){
+                val partsId = data.getIntExtra("partsId", 1)
+                val colors = data.getIntArrayExtra("colors")
+                val defaultPref = PreferenceManager.getDefaultSharedPreferences(this)
+                val ordinal = defaultPref.getInt("group", 0)
+                val group = IconLayout.GroupEnum.values()[ordinal]
+                iconUpdate(group, partsId, colors[0], colors[1])
+            }
+        }
+    }
+
+    override fun iconUpdate(group: IconLayout.GroupEnum, icon: IconDTO) {
+        val fragment = supportFragmentManager.findFragmentByTag(FragmentTag.ICON_VIEW.name)
+        if (fragment is IconViewFragment){
+            fragment.iconUpdate(group, icon)
+        }
     }
 
     override fun iconUpdate(group: IconLayout.GroupEnum, partsId: Int, tintColor: Int, lineColor: Int) {
         val fragment = supportFragmentManager.findFragmentByTag(FragmentTag.ICON_VIEW.name)
         if (fragment is IconViewFragment){
+            icon.setColorFilter(group, IconLayout.BaseTypeEnum.TINT, tintColor)
+            icon.setColorFilter(group, IconLayout.BaseTypeEnum.LINE, lineColor)
             fragment.iconUpdate(group, partsId, tintColor, lineColor)
         }
     }
@@ -49,8 +71,10 @@ class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener
         val arr = resStr.split('_')
         val group = IconLayout.GroupEnum.getTypeByValue(arr[1])
         val partsId = arr[2].toInt()
+        icon.setPartsId(group, partsId)
         //TODO 色の取得方法どうするかー！？
-        iconUpdate(group, partsId, getMyColor(R.color.yellow), getMyColor(R.color.black))
+
+        iconUpdate(group, partsId, icon.getColorFilter(group, IconLayout.BaseTypeEnum.TINT), icon.getColorFilter(group, IconLayout.BaseTypeEnum.LINE))
     }
 
     override fun onKeyClicked(keyDirection: ControllerFragment.KeyDirection) {
@@ -132,64 +156,49 @@ class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener
         groupAdapter.add(R.drawable.ic_eye_001_line)
         groupAdapter.add(R.drawable.ic_mouth_001_line)
         groupList.adapter = groupAdapter
+        val defaultPref = PreferenceManager.getDefaultSharedPreferences(this)
+        val ordinal = defaultPref.getInt("group", 0)
+        val group = IconLayout.GroupEnum.values()[ordinal]
+
         groupList.setOnItemClickListener { adapterView: AdapterView<*>, view1: View, i: Int, l: Long ->
             val resId = adapterView.adapter.getItem(i) as Int //R.drawable.xxx
-            val resArray = resources.getResourceEntryName(resId).split('_')
-            val group = resArray[1]
-            val defaultPref = PreferenceManager.getDefaultSharedPreferences(this)
+            val resArray = resources.getResourceEntryName(resId).split('_') //ic_Group_PartsId_tint
+            val _group = IconLayout.GroupEnum.getTypeByValue(resArray[1])
             //selectedGroupの保存
-            defaultPref.edit().putString("group", group).apply()
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putInt("group", _group.ordinal).apply()
             val transaction = supportFragmentManager.beginTransaction()
             if (swapFragmentState == FragmentTag.PARTS_GRID){
-                transaction.replace(R.id.swap_layout, PartsGridFragment.newInstance(null, group))
+                transaction.replace(R.id.swap_layout, PartsGridFragment.newInstance(null, _group, icon))
                 transaction.commit()
             }
         }
+
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        //PartsGridの生成
+        fragmentTransaction.replace(R.id.swap_layout, PartsGridFragment.newInstance(null, group, icon))
+        fragmentTransaction.replace(R.id.canvas_layout, IconViewFragment.newInstance(null,icon), FragmentTag.ICON_VIEW.name)
+        fragmentTransaction.commit()
 
         //ColorPickerDialogの呼出し
         val iv = findViewById<ImageView>(R.id.imageView)
         iv.setOnClickListener{ v: View ->
             //色選択対象のIDを渡す。R.drawable.xxx
-            val dialog = ColorPickerDialogFragment.newInstance(null, 0)
+            val groupInt = defaultPref.getInt("group", 0)
+            val groupEnum = IconLayout.GroupEnum.values()[groupInt]
+            val dialog = ColorPickerDialogFragment.newInstance(null, groupEnum, icon)
             dialog.show(this.supportFragmentManager, this.javaClass.simpleName)
         }
 
-        val pref = PreferenceManager.getDefaultSharedPreferences(this)
-        val selectedGroup = pref.getString("group", "")
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        //PartsGridの生成
-        if (selectedGroup == ""){
-            fragmentTransaction.replace(R.id.swap_layout, PartsGridFragment.newInstance(null, "backhair"))
-        } else {
-            fragmentTransaction.replace(R.id.swap_layout, PartsGridFragment.newInstance(null, selectedGroup))
-        }
-        //IconViewの生成
-        val icon = IconDTO().also {
-            it.backHairID = 1
-            it.bangID = 1
-            it.bodyID = 1
-            it.eyeID = 1
-            it.mouthID = 1
-            it.hairTintColor = Color.LTGRAY
-            it.hairLineColor = Color.DKGRAY
-            it.bodyTintColor = getMyColor(R.color.pale_orange)
-            it.bodyLineColor = Color.DKGRAY
-            it.eyeLineColor = Color.DKGRAY
-            it.mouthTintColor = getMyColor(R.color.pink)
-            it.mouthLineColor = Color.DKGRAY
-        }
-        fragmentTransaction.replace(R.id.canvas_layout, IconViewFragment.newInstance(null,icon), FragmentTag.ICON_VIEW.name)
-        fragmentTransaction.commit()
-
         val swapBtn = findViewById<Button>(R.id.swap_button)
         swapBtn.setOnClickListener{v: View ->
-            val group = pref.getString("group", "backhair")
+            val childOrdinal = PreferenceManager.getDefaultSharedPreferences(this).getInt("group", 0)
+            val groupEnum = IconLayout.GroupEnum.values()[childOrdinal]
 
             val transaction = supportFragmentManager.beginTransaction()
             if (swapFragmentState == FragmentTag.PARTS_GRID){
                 val f = supportFragmentManager.findFragmentByTag(FragmentTag.CONTROLLER.name)
                 if (f == null){
-                    transaction.replace(R.id.swap_layout, ControllerFragment.newInstance(null, group), FragmentTag.CONTROLLER.name)
+                    transaction.replace(R.id.swap_layout, ControllerFragment.newInstance(null, groupEnum), FragmentTag.CONTROLLER.name)
                 } else {
                     transaction.attach(f)
                 }
@@ -198,7 +207,7 @@ class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener
             } else if (swapFragmentState == FragmentTag.CONTROLLER){
                 val f = supportFragmentManager.findFragmentByTag(FragmentTag.PARTS_GRID.name)
                 if (f == null){
-                    transaction.replace(R.id.swap_layout, PartsGridFragment.newInstance(null, group), FragmentTag.PARTS_GRID.name)
+                    transaction.replace(R.id.swap_layout, PartsGridFragment.newInstance(null, groupEnum, icon), FragmentTag.PARTS_GRID.name)
                 } else {
                     transaction.attach(f)
                 }
@@ -212,39 +221,5 @@ class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener
     //sdk23からはgetColorが非推奨になり、ContextCompat.getColorを使うようになりました。
     private fun getMyColor(id: Int): Int{
         return ContextCompat.getColor(this, id)
-    }
-
-    //アイコン表示部がFragment化されたため、書換が必要
-    private fun setParts(layerId: Int, lineDrawable: Drawable?, lineColor: Int?, backDrawable: Drawable?, backColor: Int?){
-        if (lineColor is Int && lineDrawable is VectorDrawableCompat){
-            lineDrawable.setColorFilter(lineColor, PorterDuff.Mode.SRC_ATOP)
-        }
-
-        if (backColor != null && backDrawable is VectorDrawableCompat){
-            backDrawable.setColorFilter(backColor, PorterDuff.Mode.SRC_ATOP)
-        }
-
-        val layer =  findViewById<ConstraintLayout>(layerId)
-        val backImg = layer.findViewById<ImageView>(R.id.base_tint)
-        backImg.setImageDrawable(backDrawable)
-        val lineImg = layer.findViewById<ImageView>(R.id.base_line)
-        lineImg.setImageDrawable(lineDrawable)
-    }
-
-    private fun subStringResName(resName: String, cutLength: Int): String{
-        return if (resName.length - cutLength <= 0){
-            ""
-        } else {
-            resName.substring(0, resName.length - cutLength)
-        }
-    }
-
-    @SuppressWarnings("deprecation")
-    private fun getDrawableResource(id: Int): Drawable? {
-        return when {
-            id == 0 -> null
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> resources.getDrawable(id, null)
-            else -> resources.getDrawable(id)
-        }
     }
 }

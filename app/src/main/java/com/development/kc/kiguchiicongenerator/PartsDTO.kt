@@ -5,6 +5,7 @@ data class PartsDTO(
         val resString: String,
         val tintColor: Int?,
         val lineColor: Int?,
+        val scale: Float = 1f,
         val offsetX: Float = 0f,
         val offsetY: Float = 0f
 )

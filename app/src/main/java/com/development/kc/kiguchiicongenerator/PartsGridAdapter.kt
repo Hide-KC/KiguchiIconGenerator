@@ -10,16 +10,24 @@ import android.widget.ImageView
 class PartsGridAdapter(context: Context) : ArrayAdapter<PartsDTO>(context, android.R.layout.simple_list_item_1){
     private val inflater = LayoutInflater.from(context)
     private val DRAWABLE = "drawable"
-    private val TINT = "tint"
-    private val LINE = "line"
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         //選択するパーツのみの表示
-        val cv = convertView?: inflater.inflate(R.layout.parts_grid_item, null).apply { tag = PartsViewHolder(this) }
+        val cv = convertView?: inflater.inflate(R.layout.parts_grid_item, null).also {
+            it.tag = PartsViewHolder(it)
+        }
 
         val holder = cv.tag as PartsViewHolder
         val item = getItem(position)
         val resString = item.resString
+
+
+
+
+
+
+
+
 
         val tintResName = resString.replace("line", "tint")
         val tintResID = context.resources.getIdentifier(tintResName, DRAWABLE, context.packageName)

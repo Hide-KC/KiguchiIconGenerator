@@ -16,7 +16,9 @@ class PartsGridFragment: AbsFragment() {
         fun onPartsClicked(resStr: String)
     }
 
+    private var group: IconLayout.GroupEnum = IconLayout.GroupEnum.BACK_HAIR
     private var partsClickListener: OnPartsClickListener? = null
+    private lateinit var icon: IconDTO
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -24,6 +26,8 @@ class PartsGridFragment: AbsFragment() {
             partsClickListener = context
         }
     }
+
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.parts_grid_fragment, container, false)
@@ -34,12 +38,13 @@ class PartsGridFragment: AbsFragment() {
         }
 
         val args = arguments
-        var group = ""
         if (args != null){
-            group = args.getString("group", "")
+            val ordinal = args.getInt("group", 0)
+            group = IconLayout.GroupEnum.values()[ordinal]
+            icon = args.getSerializable("icon") as IconDTO
         }
 
-        if (context != null && group != ""){
+        if (context != null){
             val partsGridAdapter = PartsGridAdapter(context!!)
             val resNames = ArrayList<String>()
             //リフレクションによりDrawableId一覧を生成
@@ -56,7 +61,7 @@ class PartsGridFragment: AbsFragment() {
             for (id in resIds){
                 //TODO tintしかないパターン未対応
                 val name = resources.getResourceEntryName(id)
-                if (name.contains(group) && name.contains("line")){
+                if (name.contains(group.groupStr) && name.contains("line")){
                     resNames.add(name)
                 }
             }
@@ -73,11 +78,12 @@ class PartsGridFragment: AbsFragment() {
     }
 
     companion object {
-        fun newInstance(targetFragment: Fragment?, targetGroupResStr: String): PartsGridFragment{
+        fun newInstance(targetFragment: Fragment?, group: IconLayout.GroupEnum, icon: IconDTO): PartsGridFragment{
             val args = Bundle()
+            args.putInt("group", group.ordinal)
+            args.putSerializable("icon", icon)
             val fragment = PartsGridFragment()
             fragment.arguments = args
-            args.putString("group", targetGroupResStr)
             fragment.setTargetFragment(targetFragment, 0)
             return fragment
         }

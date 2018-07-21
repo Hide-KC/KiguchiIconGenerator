@@ -1,18 +1,20 @@
 package com.development.kc.kiguchiicongenerator
 
 import android.content.Context
+import android.graphics.PorterDuff
 import android.os.Parcelable
 import android.support.constraint.ConstraintLayout
 import android.support.constraint.ConstraintSet
 import android.support.constraint.Guideline
+import android.support.graphics.drawable.VectorDrawableCompat
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 
-class IconLayout(context: Context) : FrameLayout(context) {
-    constructor(context: Context, attrs: AttributeSet): this(context)
+class IconLayout(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs){
+    constructor(context: Context): this(context, null)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int): this(context, attrs)
 
     enum class GroupEnum(val groupStr: String) {
@@ -52,34 +54,14 @@ class IconLayout(context: Context) : FrameLayout(context) {
             PartsBaseLayout(context, GroupEnum.COMMENT)
     )
 
-    override fun onSaveInstanceState(): Parcelable {
-        return super.onSaveInstanceState()
-    }
-
     init {
         for (i in 0..(groupList.size - 1)){
             this.addView(groupList[i])
             groupList[i].layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
         }
-
-        //識別子のセット
-//        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.SBPlane, 0, 0)
-//        try{
-//            //xmlで静的にセットされている値の取出し
-//            setHue(typedArray.getFloat(R.styleable.SBPlane_sb_plane_hue, 0f))
-//        } finally {
-//            typedArray.recycle()
-//        }
     }
 
-    fun test(){
-        val g = getLayer(GroupEnum.BACK_HAIR)
-        if (g != null){
-            val u = g.findViewById<Guideline>(g.leftId)
-        }
-    }
-
-    fun getLayer(tag: GroupEnum): PartsBaseLayout?{
+    private fun getLayer(tag: GroupEnum): PartsBaseLayout?{
         var layer: PartsBaseLayout? = null
         for (l in groupList){
             if (l.tag == tag){
@@ -89,6 +71,53 @@ class IconLayout(context: Context) : FrameLayout(context) {
         return layer
     }
 
+    fun setParts(group: GroupEnum, partsId: Int){
+        val layer = getLayer(group)
+        if (layer != null){
+            val baseTint = layer.findViewById<ImageView>(layer.baseTintId)
+            val baseLine = layer.findViewById<ImageView>(layer.baseLineId)
 
+            val builder = StringBuilder()
+            builder.append("ic_").append(group.groupStr).append("_").append(String.format("%03d", partsId)).append("_")
+            val tintDrawableId = context!!.resources.getIdentifier(builder.toString() + "tint", "drawable", context!!.packageName)
+            val lineDrawableId = context!!.resources.getIdentifier(builder.toString() + "line", "drawable", context!!.packageName)
 
+            if (tintDrawableId != 0){
+                val tintDrawable = VectorDrawableCompat.create(context!!.resources, tintDrawableId, null)
+                baseTint?.setImageDrawable(tintDrawable)
+            }
+
+            if (lineDrawableId != 0){
+                val lineDrawable = VectorDrawableCompat.create(context!!.resources, lineDrawableId, null)
+                baseLine?.setImageDrawable(lineDrawable)
+            }
+        }
+    }
+
+    fun setColorFilter(group: GroupEnum, baseType: BaseTypeEnum, color: Int){
+        if (group == GroupEnum.BACK_HAIR || group == GroupEnum.BANG){
+            val layerArray = arrayOf(
+                    getLayer(GroupEnum.BACK_HAIR), getLayer(GroupEnum.BANG)
+            )
+            for (layer in layerArray){
+                if (layer != null){
+                    val base = when(baseType){
+                        IconLayout.BaseTypeEnum.TINT -> layer.findViewById<ImageView>(layer.baseTintId)
+                        IconLayout.BaseTypeEnum.LINE -> layer.findViewById<ImageView>(layer.baseLineId)
+                    }
+                    base.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
+                }
+            }
+        } else {
+            val layer = getLayer(group)
+            if (layer != null){
+                val base = when(baseType){
+                    IconLayout.BaseTypeEnum.TINT -> layer.findViewById<ImageView>(layer.baseTintId)
+                    IconLayout.BaseTypeEnum.LINE -> layer.findViewById<ImageView>(layer.baseLineId)
+                }
+
+                base.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
+            }
+        }
+    }
 }

@@ -2,7 +2,6 @@ package com.development.kc.kiguchiicongenerator
 
 import android.graphics.PorterDuff
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
 import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -15,59 +14,54 @@ import android.widget.ImageView
 class IconViewFragment: Fragment() {
     interface OnIconUpdateListener{
         fun iconUpdate(group: IconLayout.GroupEnum, partsId: Int, tintColor: Int, lineColor: Int)
+        fun iconUpdate(group: IconLayout.GroupEnum, icon: IconDTO)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.icon_views2, container, false)
         //Icon表示措置
+        val args = arguments
+        val icon = args?.getSerializable("icon") as IconDTO
+        val iconLayout = view.findViewById<IconLayout>(R.id.icon_layout)
+        for (group in IconLayout.GroupEnum.values()){
+            iconLayout.setParts(group, icon.getPartsId(group))
+            for (type in IconLayout.BaseTypeEnum.values()){
+                iconLayout.setColorFilter(group, type, icon.getColorFilter(group, type))
+            }
+        }
 
         return view
     }
 
-    fun iconUpdate(groupEnum: IconLayout.GroupEnum, partsId: Int, tintColor: Int, lineColor: Int){
-        Log.d(this.javaClass.simpleName, groupEnum.groupStr + " : " + partsId)
+    fun iconUpdate(groupEnum: IconLayout.GroupEnum, icon: IconDTO){
 
-        val tintColor: Int =
-                when(groupEnum){
-                    IconLayout.GroupEnum.BACK_HAIR -> getMyColor(R.color.dkgly)
-                    IconLayout.GroupEnum.BANG -> getMyColor(R.color.dkgly)
-                    IconLayout.GroupEnum.BODY -> getMyColor(R.color.pale_orange)
-                    IconLayout.GroupEnum.MOUTH -> getMyColor(R.color.pink)
-                    else -> 0
-                }
-        val lineColor = getMyColor(R.color.black)
+    }
 
-        val group = groupEnum.groupStr
-        val iconLayout = view as IconLayout //PartsBaseLayoutを内包するIconLayoutへのキャスト
-        val partsBaseLayout = iconLayout.getLayer(groupEnum) //base_tint等を内包するPartsBaseLayoutの取得
-        if (partsBaseLayout != null){
-            val baseTint = partsBaseLayout.findViewById<ImageView>(partsBaseLayout.baseTintId)
-            val baseLine = partsBaseLayout.findViewById<ImageView>(partsBaseLayout.baseLineId)
+    fun iconUpdate(group: IconLayout.GroupEnum, partsId: Int, tintColor: Int, lineColor: Int){
+        val iconLayout = view?.findViewById<IconLayout>(R.id.icon_layout) //PartsBaseLayoutを内包するIconLayoutへのキャスト
 
-            val builder = StringBuilder()
-            builder.append("ic_").append(group).append("_").append(String.format("%03d", partsId)).append("_")
-            val tintDrawableId = context!!.resources.getIdentifier(builder.toString() + "tint", "drawable", context!!.packageName)
-            val lineDrawableId = context!!.resources.getIdentifier(builder.toString() + "line", "drawable", context!!.packageName)
-
-            if (tintDrawableId != 0){
-                val tintDrawable = VectorDrawableCompat.create(context!!.resources, tintDrawableId, null)
-                baseTint?.setImageDrawable(tintDrawable)
-                baseTint?.setColorFilter(tintColor, PorterDuff.Mode.SRC_ATOP)
-            }
-
-            if (lineDrawableId != 0){
-                val lineDrawable = VectorDrawableCompat.create(context!!.resources, lineDrawableId, null)
-                baseLine?.setImageDrawable(lineDrawable)
-                baseLine?.setColorFilter(lineColor, PorterDuff.Mode.SRC_ATOP)
-            }
+        iconLayout?.setParts(group, partsId)
+        if (group == IconLayout.GroupEnum.BANG || group == IconLayout.GroupEnum.BACK_HAIR){
+            iconLayout?.setColorFilter(IconLayout.GroupEnum.BACK_HAIR, IconLayout.BaseTypeEnum.TINT, tintColor)
+            iconLayout?.setColorFilter(IconLayout.GroupEnum.BACK_HAIR, IconLayout.BaseTypeEnum.LINE, lineColor)
+            iconLayout?.setColorFilter(IconLayout.GroupEnum.BANG, IconLayout.BaseTypeEnum.TINT, tintColor)
+            iconLayout?.setColorFilter(IconLayout.GroupEnum.BANG, IconLayout.BaseTypeEnum.LINE, lineColor)
+        } else {
+            iconLayout?.setColorFilter(group, IconLayout.BaseTypeEnum.TINT, tintColor)
+            iconLayout?.setColorFilter(group, IconLayout.BaseTypeEnum.LINE, lineColor)
         }
     }
 
     companion object {
-        fun newInstance(targetFragment: Fragment?, iconDTO: IconDTO): IconViewFragment{
+        fun newInstance(targetFragment: Fragment?, icon: IconDTO): IconViewFragment{
             val fragment = IconViewFragment()
             val args = Bundle()
-
+            args.putSerializable("icon", icon)
             fragment.arguments = args
 
             fragment.setTargetFragment(targetFragment, 0)

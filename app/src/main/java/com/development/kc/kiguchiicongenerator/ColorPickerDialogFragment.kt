@@ -1,12 +1,14 @@
 package com.development.kc.kiguchiicongenerator
 
+import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.app.Dialog
+import android.app.PendingIntent
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
-import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.util.Log
@@ -18,15 +20,11 @@ class ColorPickerDialogFragment: DialogFragment() {
         mColorChangeSubject.detachAll()
     }
 
-    val TINT = 0
-    val LINE = 1
     private val mColorChangeSubject: Subject = ColorChangeSubject()
-    private var targetPartsId: Int = 0
-    private var targetColorArea: Int = TINT
-
-    init {
-
-    }
+    private var group: IconLayout.GroupEnum = IconLayout.GroupEnum.BACK_HAIR
+    private lateinit var icon: IconDTO
+    private var targetColorArea: IconLayout.BaseTypeEnum = IconLayout.BaseTypeEnum.TINT
+    private val changed = intArrayOf(0,0)
 
     override fun onCreateDialog(savedInstanceState: Bundle?):  Dialog {
 //        if (this.targetFragment is /*Fragment継承型*/){
@@ -38,7 +36,12 @@ class ColorPickerDialogFragment: DialogFragment() {
         if (view != null){
             val args = arguments
             if (args != null){
-                targetPartsId = args.getInt("parts_id", -1)
+                val ordinal = args.getInt("group", 0)
+                group = IconLayout.GroupEnum.values()[ordinal]
+                val icon = args.getSerializable("icon") as IconDTO
+                this.icon = icon
+                changed[0] = icon.getColorFilter(group, IconLayout.BaseTypeEnum.TINT)
+                changed[1] = icon.getColorFilter(group, IconLayout.BaseTypeEnum.LINE)
             }
 
             /*
@@ -46,67 +49,28 @@ class ColorPickerDialogFragment: DialogFragment() {
             * */
 
             //プレビューウィンドウの取得
-            val preview = view.findViewById<ConstraintLayout>(R.id.preview_layout)
-
-            //セリフの設定
-            var baseLineImage: ImageView? = null
-            var baseBackImage: ImageView? = null
-
-            if (preview != null){
-                val viewTreeObserver = preview.viewTreeObserver
-                viewTreeObserver.addOnGlobalLayoutListener {
-                    val textSize = Math.round(preview.height * 0.1f)
-                    val teststring = "ぷれびゅーがめん！"
-                    val testBitmap = DrawableController.textToBitmap(this.activity!!, Color.BLACK, teststring, textSize)
-
-                    val commentView = preview.findViewById<ImageView>(R.id.comment)
-                    commentView?.setImageBitmap(testBitmap)
+            val iconLayout = view.findViewById<IconLayout>(R.id.icon_preview)
+            for (group in IconLayout.GroupEnum.values()){
+                iconLayout.setParts(group, icon.getPartsId(group))
+                for (type in IconLayout.BaseTypeEnum.values()){
+                    iconLayout.setColorFilter(group, type, icon.getColorFilter(group, type))
                 }
-
-                //セットするImageViewを取得
-                baseLineImage = preview.findViewById<ConstraintLayout>(R.id.backhair_layer)?.findViewById<ImageView>(R.id.base_line)
-                baseBackImage = preview.findViewById<ConstraintLayout>(R.id.backhair_layer)?.findViewById<ImageView>(R.id.base_tint)
-                var lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_001_line, null)
-                var backVD = VectorDrawableCompat.create(resources, R.drawable.ic_backhair_001_tint, null)
-                baseLineImage?.setImageDrawable(lineVD)
-                baseBackImage?.setImageDrawable(backVD)
-
-                baseLineImage = preview.findViewById<ConstraintLayout>(R.id.body_layer)?.findViewById(R.id.base_line)
-                baseBackImage = preview.findViewById<ConstraintLayout>(R.id.body_layer)?.findViewById(R.id.base_tint)
-                lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_body_001_line, null)
-                backVD = VectorDrawableCompat.create(resources, R.drawable.ic_body_001_tint, null)
-                baseLineImage?.setImageDrawable(lineVD)
-                baseBackImage?.setImageDrawable(backVD)
-
-                baseLineImage = preview.findViewById<ConstraintLayout>(R.id.eye_layer)?.findViewById(R.id.base_line)
-                lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_eye_001_line, null)
-                baseLineImage?.setImageDrawable(lineVD)
-
-                baseLineImage = preview.findViewById<ConstraintLayout>(R.id.mouth_layer)?.findViewById(R.id.base_line)
-                baseBackImage = preview.findViewById<ConstraintLayout>(R.id.mouth_layer)?.findViewById(R.id.base_tint)
-                lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_001_line, null)
-                backVD = VectorDrawableCompat.create(resources, R.drawable.ic_mouth_001_tint, null)
-                baseLineImage?.setImageDrawable(lineVD)
-                baseBackImage?.setImageDrawable(backVD)
-
-                baseLineImage = preview.findViewById<ConstraintLayout>(R.id.bang_layer)?.findViewById(R.id.base_line)
-                baseBackImage = preview.findViewById<ConstraintLayout>(R.id.bang_layer)?.findViewById(R.id.base_tint)
-                lineVD = VectorDrawableCompat.create(resources, R.drawable.ic_bang_001_line, null)
-                backVD = VectorDrawableCompat.create(resources, R.drawable.ic_bang_001_tint, null)
-                baseLineImage?.setImageDrawable(lineVD)
-                baseBackImage?.setImageDrawable(backVD)
             }
+
+
+            //TODO セリフの設定
+
 
             //TINT OR LINEの変更はImageView.onClickで切り替え
             val tintColorImage = view.findViewById<ObservableImageView>(R.id.tint_color_image)
             val lineColorImage = view.findViewById<ObservableImageView>(R.id.line_color_image)
-            tintColorImage.setOnClickListener{ targetColorArea = TINT }
-            lineColorImage.setOnClickListener{ targetColorArea = LINE }
+            tintColorImage.setOnClickListener{ targetColorArea = IconLayout.BaseTypeEnum.TINT }
+            lineColorImage.setOnClickListener{ targetColorArea = IconLayout.BaseTypeEnum.LINE }
 
             if (tintColorImage is IObserver){
                 tintColorImage.setObserver(object: IObserver{
                     override fun colorUpdate(hue: Float, saturation: Float, brightness: Float) {
-                        if (targetColorArea == TINT){
+                        if (targetColorArea == IconLayout.BaseTypeEnum.TINT){
                             tintColorImage.setColorFilter(Color.HSVToColor(floatArrayOf(hue,saturation,brightness)))
                         }
                     }
@@ -117,7 +81,7 @@ class ColorPickerDialogFragment: DialogFragment() {
             if (lineColorImage is IObserver){
                 lineColorImage.setObserver(object: IObserver{
                     override fun colorUpdate(hue: Float, saturation: Float, brightness: Float) {
-                        if (targetColorArea == LINE){
+                        if (targetColorArea == IconLayout.BaseTypeEnum.LINE){
                             lineColorImage.setColorFilter(Color.HSVToColor(floatArrayOf(hue,saturation,brightness)))
                         }
                     }
@@ -132,14 +96,11 @@ class ColorPickerDialogFragment: DialogFragment() {
                     //targetColorArea, パーツのImageViewにもIObserverを実装する（カスタムビュー化）
                     //→HueBarやSBPlaneなど、notify()を叩いたら全てに反映される。
 
-                    if (targetColorArea == TINT){
-                        tintColorImage?.setColorFilter(color)
-                        baseBackImage?.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
-                    } else if (targetColorArea == LINE){
-                        lineColorImage?.setColorFilter(color)
-                        baseLineImage?.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
+                    iconLayout.setColorFilter(group, targetColorArea, color)
+                    when(targetColorArea){
+                        IconLayout.BaseTypeEnum.TINT -> changed[0] = color
+                        IconLayout.BaseTypeEnum.LINE -> changed[1] = color
                     }
-
                     mColorChangeSubject.notifyColorChange(hue, saturation, brightness)
                 }
             })
@@ -198,21 +159,32 @@ class ColorPickerDialogFragment: DialogFragment() {
 
         val builder = AlertDialog.Builder(activity)
         builder.setView(view)
-                .setPositiveButton(android.R.string.ok) { dialog, which ->
+                .setPositiveButton(android.R.string.ok) { dialog, resultCode ->
                     Log.d(this.javaClass.simpleName, "OK")
-                    dialog.dismiss()
+                    val intent = Intent().also {
+                        it.putExtra("partsId", icon.getPartsId(group))
+                        it.putExtra("colors", changed)
+                    }
+                    val pi = activity?.createPendingResult(targetRequestCode, intent, PendingIntent.FLAG_ONE_SHOT)
+                    try {
+                        pi?.send(Activity.RESULT_OK)
+                    } catch (e: PendingIntent.CanceledException){
+                        e.printStackTrace()
+                    }
+                    dismiss()
                 }
         return builder.create()
 
     }
 
     companion object {
-        fun newInstance(targetFragment: Fragment?, targetPartsId: Int): ColorPickerDialogFragment{
+        fun newInstance(targetFragment: Fragment?, group: IconLayout.GroupEnum, icon: IconDTO): ColorPickerDialogFragment{
             val args = Bundle()
-            args.putInt("parts_id", targetPartsId)
+            args.putInt("group", group.ordinal)
+            args.putSerializable("icon", icon)
             val fragment = ColorPickerDialogFragment()
             fragment.arguments = args
-            fragment.setTargetFragment(targetFragment, 0)
+            fragment.setTargetFragment(targetFragment, 100)
             return fragment
         }
     }
