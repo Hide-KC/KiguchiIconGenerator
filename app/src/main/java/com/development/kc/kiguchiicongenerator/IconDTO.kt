@@ -53,7 +53,13 @@ class IconDTO: Serializable{
             IconLayout.BaseTypeEnum.TINT -> tintColorMap
             IconLayout.BaseTypeEnum.LINE -> lineColorMap
         }
-        map[group] = color
+
+        if (group == IconLayout.GroupEnum.BANG || group == IconLayout.GroupEnum.BACK_HAIR){
+            map[IconLayout.GroupEnum.BANG] = color
+            map[IconLayout.GroupEnum.BACK_HAIR] = color
+        } else {
+            map[group] = color
+        }
     }
 
     fun getPartsId(group: IconLayout.GroupEnum): Int{
