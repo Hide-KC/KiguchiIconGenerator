@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 
 class ControllerFragment: AbsFragment() {
     enum class KeyDirection {
@@ -27,7 +28,8 @@ class ControllerFragment: AbsFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.controller_fragment, container, false)
-
+        val outPutBtn = view?.findViewById<Button>(R.id.output)
+        outPutBtn?.setOnClickListener { DrawableController.saveAsPngImage(context!!, IconDTO()) }
 
         return view
     }

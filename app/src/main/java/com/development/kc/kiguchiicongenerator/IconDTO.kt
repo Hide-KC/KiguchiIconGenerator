@@ -3,7 +3,9 @@ package com.development.kc.kiguchiicongenerator
 import android.graphics.Color
 import java.io.Serializable
 
-class IconDTO: Serializable{
+class IconDTO(private val tag: String?): Serializable{
+    constructor(): this(null)
+
     private val partsMap = mutableMapOf<IconLayout.GroupEnum, Int>().also {
         for (v in IconLayout.GroupEnum.values()){
             it[v] = 1
@@ -44,6 +46,8 @@ class IconDTO: Serializable{
         }
     }
 
+    private var backGroundResId: Int? = null
+
     fun setPartsId(group: IconLayout.GroupEnum, partsId: Int){
         partsMap[group] = partsId
     }
@@ -72,5 +76,13 @@ class IconDTO: Serializable{
             IconLayout.BaseTypeEnum.LINE -> lineColorMap
         }
         return map[group]!!
+    }
+
+    fun getTag(): String?{
+        return tag
+    }
+
+    fun setBackground(resId: Int){
+
     }
 }
