@@ -12,11 +12,8 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.ImageView
 
-class PartsBaseLayout(context: Context, attrs: AttributeSet?, val tag: IconLayout.GroupEnum?): ConstraintLayout(context, attrs) {
-    constructor(context: Context): this(context, null, null)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int): this(context, attrs, null)
-    constructor(context: Context, tag: IconLayout.GroupEnum): this(context, null, tag)
-
+class PartsBaseLayout: ConstraintLayout {
+    lateinit var tag: IconLayout.GroupEnum
     val baseTintId = View.generateViewId()
     val baseLineId = View.generateViewId()
     val leftId = View.generateViewId()
@@ -26,7 +23,10 @@ class PartsBaseLayout(context: Context, attrs: AttributeSet?, val tag: IconLayou
     private var offsetX: Float = 0f
     private var offsetY: Float = 0f
 
-    init {
+    constructor(context: Context): this(context, null)
+    constructor(context: Context, attrs: AttributeSet?): this(context, attrs, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int): super(context, attrs, defStyleAttr){
+
         val baseTint = ImageView(context).also {
             it.id = baseTintId
             it.scaleType = ImageView.ScaleType.FIT_CENTER
@@ -53,43 +53,34 @@ class PartsBaseLayout(context: Context, attrs: AttributeSet?, val tag: IconLayou
         constraintSet.create(topId, ConstraintSet.HORIZONTAL_GUIDELINE)
         constraintSet.setGuidelinePercent(topId, 0f)
 
-//        constraintSet.connect(baseTint.id, ConstraintSet.START, leftId, ConstraintSet.START)
-//        constraintSet.connect(baseTint.id, ConstraintSet.END, rightId, ConstraintSet.START)
-//        constraintSet.connect(baseTint.id, ConstraintSet.TOP, topId, ConstraintSet.TOP)
-//        constraintSet.connect(baseTint.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
+        constraintSet.connect(baseTint.id, ConstraintSet.START, leftId, ConstraintSet.START)
+        constraintSet.connect(baseTint.id, ConstraintSet.END, rightId, ConstraintSet.START)
+        constraintSet.connect(baseTint.id, ConstraintSet.TOP, topId, ConstraintSet.TOP)
+        constraintSet.connect(baseTint.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
 
-        constraintSet.connect(baseTint.id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 0)
-        constraintSet.connect(baseTint.id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 0)
-        constraintSet.connect(baseTint.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0)
-        constraintSet.connect(baseTint.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0)
+//        constraintSet.connect(baseTint.id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 0)
+//        constraintSet.connect(baseTint.id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 0)
+//        constraintSet.connect(baseTint.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0)
+//        constraintSet.connect(baseTint.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0)
 
         constraintSet.constrainWidth(baseTint.id, ConstraintSet.MATCH_CONSTRAINT)
         constraintSet.constrainHeight(baseTint.id, ConstraintSet.MATCH_CONSTRAINT)
 
 
-//        constraintSet.connect(baseLine.id, ConstraintSet.START, leftId, ConstraintSet.START)
-//        constraintSet.connect(baseLine.id, ConstraintSet.END, rightId, ConstraintSet.START)
-//        constraintSet.connect(baseLine.id, ConstraintSet.TOP, topId, ConstraintSet.TOP)
-//        constraintSet.connect(baseLine.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
+        constraintSet.connect(baseLine.id, ConstraintSet.START, leftId, ConstraintSet.START)
+        constraintSet.connect(baseLine.id, ConstraintSet.END, rightId, ConstraintSet.START)
+        constraintSet.connect(baseLine.id, ConstraintSet.TOP, topId, ConstraintSet.TOP)
+        constraintSet.connect(baseLine.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
 
-        constraintSet.connect(baseLine.id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 0)
-        constraintSet.connect(baseLine.id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 0)
-        constraintSet.connect(baseLine.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0)
-        constraintSet.connect(baseLine.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0)
+//        constraintSet.connect(baseLine.id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 0)
+//        constraintSet.connect(baseLine.id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 0)
+//        constraintSet.connect(baseLine.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0)
+//        constraintSet.connect(baseLine.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0)
 
         constraintSet.constrainWidth(baseLine.id, ConstraintSet.MATCH_CONSTRAINT)
         constraintSet.constrainHeight(baseLine.id, ConstraintSet.MATCH_CONSTRAINT)
 
         constraintSet.applyTo(this)
-
-        //識別子のセット、ScaleType、BackGround、Constraintの設定
-//        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.SBPlane, 0, 0)
-//        try{
-//            //xmlで静的にセットされている値の取出し
-//            setHue(typedArray.getFloat(R.styleable.SBPlane_sb_plane_hue, 0f))
-//        } finally {
-//            typedArray.recycle()
-//        }
     }
 
     override fun onSaveInstanceState(): Parcelable {

@@ -5,17 +5,17 @@ abstract class Subject {
         WAIT, RUNNING, ERROR
     }
 
-    protected val observers = mutableListOf<IObserver>()
+    protected val observers = mutableListOf<IColorObserver>()
     private var state: States = States.WAIT
 
-    fun attach(observer: IObserver) {
-        observers.add(observer)
+    fun attach(colorObserver: IColorObserver) {
+        observers.add(colorObserver)
     }
 
-    fun detach(observer: IObserver) {
+    fun detach(colorObserver: IColorObserver) {
         for(i in observers.indices){
             //参照先の比較
-            if (observers[i] == observer){
+            if (observers[i] == colorObserver){
                 observers.removeAt(i)
                 return
             }

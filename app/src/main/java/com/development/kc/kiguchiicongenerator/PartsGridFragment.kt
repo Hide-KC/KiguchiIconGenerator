@@ -18,7 +18,6 @@ class PartsGridFragment: AbsFragment() {
 
     private var group: IconLayout.GroupEnum = IconLayout.GroupEnum.BACK_HAIR
     private var partsClickListener: OnPartsClickListener? = null
-    private lateinit var icon: IconDTO
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -26,8 +25,6 @@ class PartsGridFragment: AbsFragment() {
             partsClickListener = context
         }
     }
-
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.parts_grid_fragment, container, false)
@@ -41,10 +38,15 @@ class PartsGridFragment: AbsFragment() {
         if (args != null){
             val ordinal = args.getInt("group", 0)
             group = IconLayout.GroupEnum.values()[ordinal]
-            icon = args.getSerializable("icon") as IconDTO
         }
 
         if (context != null){
+            val fragment = activity?.supportFragmentManager?.findFragmentByTag(MainActivity.FragmentTag.ICON_VIEW.name)
+            val icon = when(fragment){
+                is IconViewFragment -> fragment.getIcon()
+                else -> IconDTO()
+            }
+
             val partsGridAdapter = PartsGridAdapter(context!!)
             val resNames = ArrayList<String>()
             //リフレクションによりDrawableId一覧を生成
@@ -67,8 +69,7 @@ class PartsGridFragment: AbsFragment() {
             }
 
             for (name in resNames){
-                //TODO tint_color, line_colorをどう設定する？
-                partsGridAdapter.add(PartsDTO(name, Color.YELLOW, Color.parseColor("#ff555555")))
+                partsGridAdapter.add(PartsDTO(name, tintColor = icon.getColorFilter(group, IconLayout.BaseTypeEnum.TINT), lineColor = icon.getColorFilter(group, IconLayout.BaseTypeEnum.LINE)))
             }
 
             gridView.adapter = partsGridAdapter
@@ -78,10 +79,9 @@ class PartsGridFragment: AbsFragment() {
     }
 
     companion object {
-        fun newInstance(targetFragment: Fragment?, group: IconLayout.GroupEnum, icon: IconDTO): PartsGridFragment{
+        fun newInstance(targetFragment: Fragment?, group: IconLayout.GroupEnum): PartsGridFragment{
             val args = Bundle()
             args.putInt("group", group.ordinal)
-            args.putSerializable("icon", icon)
             val fragment = PartsGridFragment()
             fragment.arguments = args
             fragment.setTargetFragment(targetFragment, 0)

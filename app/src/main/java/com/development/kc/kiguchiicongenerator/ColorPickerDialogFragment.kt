@@ -1,18 +1,15 @@
 package com.development.kc.kiguchiicongenerator
 
 import android.app.Activity
-import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.app.Dialog
 import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.util.Log
-import android.widget.ImageView
 
 class ColorPickerDialogFragment: DialogFragment() {
     override fun onDestroy() {
@@ -22,7 +19,6 @@ class ColorPickerDialogFragment: DialogFragment() {
 
     private val mColorChangeSubject: Subject = ColorChangeSubject()
     private var group: IconLayout.GroupEnum = IconLayout.GroupEnum.BACK_HAIR
-    private lateinit var icon: IconDTO
     private var targetColorArea: IconLayout.BaseTypeEnum = IconLayout.BaseTypeEnum.TINT
     private val changed = intArrayOf(0,0)
 
@@ -31,6 +27,12 @@ class ColorPickerDialogFragment: DialogFragment() {
 //            //なんかの処理
 //        }
 
+        val fragment = activity?.supportFragmentManager?.findFragmentByTag(MainActivity.FragmentTag.ICON_VIEW.name)
+        val icon = when(fragment){
+            is IconViewFragment -> fragment.getIcon()
+            else -> IconDTO()
+        }
+
         //レイアウト展開
         val view = activity?.layoutInflater?.inflate(R.layout.color_select_dialog, null)
         if (view != null){
@@ -38,15 +40,15 @@ class ColorPickerDialogFragment: DialogFragment() {
             if (args != null){
                 val ordinal = args.getInt("group", 0)
                 group = IconLayout.GroupEnum.values()[ordinal]
-                val icon = args.getSerializable("icon") as IconDTO
-                this.icon = icon
-                changed[0] = icon.getColorFilter(group, IconLayout.BaseTypeEnum.TINT)
-                changed[1] = icon.getColorFilter(group, IconLayout.BaseTypeEnum.LINE)
             }
 
             /*
             * イベント付与したり値をセットしたり
             * */
+
+            //初期カラー
+            changed[0] = icon.getColorFilter(group, IconLayout.BaseTypeEnum.TINT)
+            changed[1] = icon.getColorFilter(group, IconLayout.BaseTypeEnum.LINE)
 
             //プレビューウィンドウの取得
             val iconLayout = view.findViewById<IconLayout>(R.id.icon_preview)
@@ -67,26 +69,26 @@ class ColorPickerDialogFragment: DialogFragment() {
             tintColorImage.setOnClickListener{ targetColorArea = IconLayout.BaseTypeEnum.TINT }
             lineColorImage.setOnClickListener{ targetColorArea = IconLayout.BaseTypeEnum.LINE }
 
-            if (tintColorImage is IObserver){
-                tintColorImage.setObserver(object: IObserver{
+            if (tintColorImage is IColorObserver){
+                tintColorImage.setObserver(object: IColorObserver{
                     override fun colorUpdate(hue: Float, saturation: Float, brightness: Float) {
                         if (targetColorArea == IconLayout.BaseTypeEnum.TINT){
                             tintColorImage.setColorFilter(Color.HSVToColor(floatArrayOf(hue,saturation,brightness)))
                         }
                     }
                 })
-                mColorChangeSubject.attach(tintColorImage as IObserver)
+                mColorChangeSubject.attach(tintColorImage as IColorObserver)
             }
 
-            if (lineColorImage is IObserver){
-                lineColorImage.setObserver(object: IObserver{
+            if (lineColorImage is IColorObserver){
+                lineColorImage.setObserver(object: IColorObserver{
                     override fun colorUpdate(hue: Float, saturation: Float, brightness: Float) {
                         if (targetColorArea == IconLayout.BaseTypeEnum.LINE){
                             lineColorImage.setColorFilter(Color.HSVToColor(floatArrayOf(hue,saturation,brightness)))
                         }
                     }
                 })
-                mColorChangeSubject.attach(lineColorImage as IObserver)
+                mColorChangeSubject.attach(lineColorImage as IColorObserver)
             }
 
             val sbPlane = view.findViewById<AbsHSBView>(R.id.sb_plane)
@@ -112,11 +114,11 @@ class ColorPickerDialogFragment: DialogFragment() {
                 }
             })
 
-            if (sbPlane is IObserver){
+            if (sbPlane is IColorObserver){
                 mColorChangeSubject.attach(sbPlane)
             }
 
-            if (hueBar is IObserver){
+            if (hueBar is IColorObserver){
                 mColorChangeSubject.attach(hueBar)
             }
 
@@ -124,25 +126,25 @@ class ColorPickerDialogFragment: DialogFragment() {
             val greenValue = view.findViewById<ObservableTextView>(R.id.green_value)
             val blueValue = view.findViewById<ObservableTextView>(R.id.blue_value)
             val code = view.findViewById<ObservableTextView>(R.id.code)
-            redValue.setObserver(object: IObserver{
+            redValue.setObserver(object: IColorObserver{
                 override fun colorUpdate(hue: Float, saturation: Float, brightness: Float) {
                     val color = Color.HSVToColor(floatArrayOf(hue, saturation, brightness))
                     redValue.text = Color.red(color).toString()
                 }
             })
-            greenValue.setObserver(object: IObserver{
+            greenValue.setObserver(object: IColorObserver{
                 override fun colorUpdate(hue: Float, saturation: Float, brightness: Float) {
                     val color = Color.HSVToColor(floatArrayOf(hue, saturation, brightness))
                     greenValue.text = Color.green(color).toString()
                 }
             })
-            blueValue.setObserver(object: IObserver{
+            blueValue.setObserver(object: IColorObserver{
                 override fun colorUpdate(hue: Float, saturation: Float, brightness: Float) {
                     val color = Color.HSVToColor(floatArrayOf(hue, saturation, brightness))
                     blueValue.text = Color.blue(color).toString()
                 }
             })
-            code.setObserver(object: IObserver{
+            code.setObserver(object: IColorObserver{
                 override fun colorUpdate(hue: Float, saturation: Float, brightness: Float) {
                     val color = Color.HSVToColor(floatArrayOf(hue, saturation, brightness))
                     code.text = Integer.toHexString(color)
@@ -178,10 +180,9 @@ class ColorPickerDialogFragment: DialogFragment() {
     }
 
     companion object {
-        fun newInstance(targetFragment: Fragment?, group: IconLayout.GroupEnum, icon: IconDTO): ColorPickerDialogFragment{
+        fun newInstance(targetFragment: Fragment?, group: IconLayout.GroupEnum): ColorPickerDialogFragment{
             val args = Bundle()
             args.putInt("group", group.ordinal)
-            args.putSerializable("icon", icon)
             val fragment = ColorPickerDialogFragment()
             fragment.arguments = args
             fragment.setTargetFragment(targetFragment, 100)

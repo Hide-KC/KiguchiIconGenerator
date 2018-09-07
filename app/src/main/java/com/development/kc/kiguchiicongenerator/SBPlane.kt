@@ -10,15 +10,10 @@ import android.view.MotionEvent
 /**
  * TODO: document your custom view class.
  */
-class SBPlane(context: Context, attrs: AttributeSet?) : AbsHSBView(context, attrs){
+class SBPlane: AbsHSBView{
     constructor(context: Context): this(context, null)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int): this(context, attrs)
-
-    private val viewSize: FloatArray = floatArrayOf(0f, 0f)
-    private lateinit var paint: Paint
-    private lateinit var lg: LinearGradient
-
-    init {
+    constructor(context: Context, attrs: AttributeSet?): this(context, attrs, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int): super(context, attrs, defStyleAttr){
         //識別子のセット
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.SBPlane, 0, 0)
         try{
@@ -27,6 +22,14 @@ class SBPlane(context: Context, attrs: AttributeSet?) : AbsHSBView(context, attr
         } finally {
             typedArray.recycle()
         }
+    }
+
+    private val viewSize: FloatArray = floatArrayOf(0f, 0f)
+    private lateinit var paint: Paint
+    private lateinit var lg: LinearGradient
+
+    init {
+
     }
 
     //onDrawの前に発生

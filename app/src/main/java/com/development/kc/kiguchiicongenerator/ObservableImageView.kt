@@ -1,20 +1,20 @@
 package com.development.kc.kiguchiicongenerator
 
 import android.content.Context
-import android.graphics.ColorFilter
 import android.util.AttributeSet
 import android.widget.ImageView
 
 //IObserver持たせたかっただけ
-class ObservableImageView(context: Context, attrs: AttributeSet?): ImageView(context, attrs), IObserver{
+class ObservableImageView: ImageView, IColorObserver{
     constructor(context: Context): this(context, null)
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int): this(context, attrs)
+    constructor(context: Context, attrs: AttributeSet?): this(context, attrs, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int): super(context, attrs, defStyleAttr)
 
-    private var mListener: IObserver? = null
+    private var mListener: IColorObserver? = null
     private var color: Int = 0
 
-    fun setObserver(observer: IObserver){
-        mListener = observer
+    fun setObserver(colorObserver: IColorObserver){
+        mListener = colorObserver
     }
 
     override fun colorUpdate(hue: Float, saturation: Float, brightness: Float){

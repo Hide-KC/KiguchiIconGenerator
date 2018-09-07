@@ -4,9 +4,10 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 
-abstract class AbsHSBView(context: Context, attrs: AttributeSet?) : View(context, attrs), IObserver {
+abstract class AbsHSBView: View, IColorObserver {
     constructor(context: Context): this(context, null)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int): this(context, attrs)
+    constructor(context: Context, attrs: AttributeSet?): this(context, attrs, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int): super(context, attrs, defStyleAttr)
 
     interface OnHSBChangedListener {
         fun onHSBChanged(hue: Float, saturation: Float, brightness: Float)
@@ -54,28 +55,22 @@ abstract class AbsHSBView(context: Context, attrs: AttributeSet?) : View(context
         this.mHue = d
     }
     fun setSaturation(saturation: Float){
-        when {
-            saturation < 0f -> this.mSaturation = 0f
-            saturation > 1f -> this.mSaturation = 1f
-            else -> this.mSaturation = saturation
+        mSaturation = when {
+            saturation < 0f -> 0f
+            saturation > 1f -> 1f
+            else -> saturation
         }
     }
     fun setBrightness(brightness: Float){
-        when {
-            brightness < 0f -> this.mBrightness = 0f
-            brightness > 1f -> this.mBrightness = 1f
-            else -> this.mBrightness = brightness
+        mBrightness = when {
+            brightness < 0f -> 0f
+            brightness > 1f -> 1f
+            else -> brightness
         }
     }
 
-    public var mListener: AbsHSBView.OnHSBChangedListener? = null
+    var mListener: AbsHSBView.OnHSBChangedListener? = null
     fun setOnHSBChangeListener(listener: OnHSBChangedListener){
-        if (mListener == null){
-            this.mListener = listener
-        }
-    }
-
-    override fun colorUpdate(hue: Float, saturation: Float, brightness: Float) {
-
+        this.mListener = mListener?: listener
     }
 }

@@ -14,8 +14,11 @@ import android.widget.ImageView
 class IconViewFragment: Fragment() {
     interface OnIconUpdateListener{
         fun iconUpdate(group: IconLayout.GroupEnum, partsId: Int, tintColor: Int, lineColor: Int)
-        fun iconUpdate(group: IconLayout.GroupEnum, icon: IconDTO)
+        fun partsSelected(group: IconLayout.GroupEnum, partsId: Int)
     }
+
+    //TODO IconDTOをIconViewFragment内で管理する。MainActivityからは除去
+    private val icon: IconDTO = IconDTO()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,8 +28,6 @@ class IconViewFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.icon_views2, container, false)
         //Icon表示措置
-        val args = arguments
-        val icon = args?.getSerializable("icon") as IconDTO
         val iconLayout = view.findViewById<IconLayout>(R.id.icon_layout)
         for (group in IconLayout.GroupEnum.values()){
             iconLayout.setParts(group, icon.getPartsId(group))
@@ -38,11 +39,11 @@ class IconViewFragment: Fragment() {
         return view
     }
 
-    fun iconUpdate(groupEnum: IconLayout.GroupEnum, icon: IconDTO){
-
-    }
-
     fun iconUpdate(group: IconLayout.GroupEnum, partsId: Int, tintColor: Int, lineColor: Int){
+        icon.setPartsId(group, partsId)
+        icon.setColorFilter(group, IconLayout.BaseTypeEnum.TINT, tintColor)
+        icon.setColorFilter(group, IconLayout.BaseTypeEnum.LINE, lineColor)
+
         val iconLayout = view?.findViewById<IconLayout>(R.id.icon_layout) //PartsBaseLayoutを内包するIconLayoutへのキャスト
 
         iconLayout?.setParts(group, partsId)
@@ -57,13 +58,13 @@ class IconViewFragment: Fragment() {
         }
     }
 
-    companion object {
-        fun newInstance(targetFragment: Fragment?, icon: IconDTO): IconViewFragment{
-            val fragment = IconViewFragment()
-            val args = Bundle()
-            args.putSerializable("icon", icon)
-            fragment.arguments = args
+    fun partsSelected(group: IconLayout.GroupEnum, partsId: Int){
+        iconUpdate(group, partsId, icon.getColorFilter(group, IconLayout.BaseTypeEnum.TINT), icon.getColorFilter(group, IconLayout.BaseTypeEnum.LINE))
+    }
 
+    companion object {
+        fun newInstance(targetFragment: Fragment?): IconViewFragment{
+            val fragment = IconViewFragment()
             fragment.setTargetFragment(targetFragment, 0)
             return fragment
         }
@@ -76,5 +77,9 @@ class IconViewFragment: Fragment() {
         } else {
             return 0
         }
+    }
+
+    fun getIcon(): IconDTO{
+        return icon
     }
 }

@@ -13,9 +13,15 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 
-class IconLayout(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs){
+class IconLayout: FrameLayout{
     constructor(context: Context): this(context, null)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int): this(context, attrs)
+    constructor(context: Context, attrs: AttributeSet?): this(context, attrs, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int): super(context, attrs, defStyleAttr){
+        for (i in 0..(groupList.size - 1)){
+            this.addView(groupList[i])
+            groupList[i].layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+        }
+    }
 
     enum class GroupEnum(val groupStr: String) {
         BACK_HAIR("backhair"),
@@ -46,20 +52,13 @@ class IconLayout(context: Context, attrs: AttributeSet?) : FrameLayout(context, 
 
     //レイヤーの階層を定義。深層から表層の順に列挙。中身はカスタムビュー
     private val groupList = listOf(
-            PartsBaseLayout(context, GroupEnum.BACK_HAIR),
-            PartsBaseLayout(context, GroupEnum.BODY),
-            PartsBaseLayout(context, GroupEnum.EYE),
-            PartsBaseLayout(context, GroupEnum.MOUTH),
-            PartsBaseLayout(context, GroupEnum.BANG),
-            PartsBaseLayout(context, GroupEnum.COMMENT)
+            PartsBaseLayout(context).also { it.tag = GroupEnum.BACK_HAIR },
+            PartsBaseLayout(context).also { it.tag = GroupEnum.BODY },
+            PartsBaseLayout(context).also { it.tag = GroupEnum.EYE },
+            PartsBaseLayout(context).also { it.tag = GroupEnum.MOUTH },
+            PartsBaseLayout(context).also { it.tag = GroupEnum.BANG },
+            PartsBaseLayout(context).also { it.tag = GroupEnum.COMMENT }
     )
-
-    init {
-        for (i in 0..(groupList.size - 1)){
-            this.addView(groupList[i])
-            groupList[i].layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-        }
-    }
 
     private fun getLayer(tag: GroupEnum): PartsBaseLayout?{
         var layer: PartsBaseLayout? = null

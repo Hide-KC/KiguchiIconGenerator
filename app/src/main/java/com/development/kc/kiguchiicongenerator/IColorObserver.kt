@@ -1,5 +1,5 @@
 package com.development.kc.kiguchiicongenerator
 
-interface IObserver {
+interface IColorObserver {
     fun colorUpdate(hue: Float, saturation: Float, brightness: Float)
 }

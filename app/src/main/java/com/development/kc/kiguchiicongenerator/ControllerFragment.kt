@@ -29,7 +29,15 @@ class ControllerFragment: AbsFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.controller_fragment, container, false)
         val outPutBtn = view?.findViewById<Button>(R.id.output)
-        outPutBtn?.setOnClickListener { DrawableController.saveAsPngImage(context!!, IconDTO()) }
+        val args = arguments
+        outPutBtn?.setOnClickListener {
+            val fragment = activity?.supportFragmentManager?.findFragmentByTag(MainActivity.FragmentTag.ICON_VIEW.name)
+            val icon = when(fragment){
+                is IconViewFragment -> fragment.getIcon()
+                else -> IconDTO()
+            }
+            DrawableController.saveAsPngImage(context!!, icon)
+        }
 
         return view
     }

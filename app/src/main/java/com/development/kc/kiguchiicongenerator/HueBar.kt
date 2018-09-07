@@ -4,13 +4,24 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 
 @SuppressWarnings("MagicNumber")
-class HueBar(context: Context, attrs: AttributeSet?): AbsHSBView(context, attrs) {
+class HueBar: AbsHSBView{
     constructor(context: Context): this(context, null)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int): this(context, attrs)
+    constructor(context: Context, attrs: AttributeSet?): this(context, attrs, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int): super(context, attrs, defStyleAttr){
+        //識別子のセット
+        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.HueBar, defStyleAttr, 0)
+        try{
+            //xmlで静的にセットされている値の取出し
+            setHue(typedArray.getFloat(R.styleable.HueBar_hue, 0f))
+            strokeSize = typedArray.getDimension(R.styleable.HueBar_stroke_size, 2 * context.resources.displayMetrics.density)
+            pick = typedArray.getFloat(R.styleable.HueBar_pick, 0f)
+        } finally {
+            typedArray.recycle()
+        }
+    }
 
     private val rainbowArray: IntArray = intArrayOf(
         Color.parseColor("#ffff0000"),
@@ -39,19 +50,6 @@ class HueBar(context: Context, attrs: AttributeSet?): AbsHSBView(context, attrs)
     }
 
     private val pickPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-
-    init {
-        //識別子のセット
-        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.HueBar, 0, 0)
-        try{
-            //xmlで静的にセットされている値の取出し
-            setHue(typedArray.getFloat(R.styleable.HueBar_hue, 0f))
-            strokeSize = typedArray.getDimension(R.styleable.HueBar_stroke_size, 2 * context.resources.displayMetrics.density)
-            pick = typedArray.getFloat(R.styleable.HueBar_pick, 0f)
-        } finally {
-            typedArray.recycle()
-        }
-    }
 
     override fun onDraw(canvas: Canvas) {
         drawPicker(canvas)

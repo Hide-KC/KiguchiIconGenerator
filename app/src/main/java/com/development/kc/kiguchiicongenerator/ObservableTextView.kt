@@ -5,14 +5,15 @@ import android.util.AttributeSet
 import android.widget.TextView
 
 //IObserver持たせたかっただけ
-class ObservableTextView(context: Context, attrs: AttributeSet?): TextView(context, attrs), IObserver{
+class ObservableTextView: TextView, IColorObserver{
     constructor(context: Context): this(context, null)
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int): this(context, attrs)
+    constructor(context: Context, attrs: AttributeSet?): this(context, attrs, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int): super(context, attrs, defStyleAttr)
 
-    private var mListener: IObserver? = null
+    private var mListener: IColorObserver? = null
 
-    fun setObserver(observer: IObserver){
-        mListener = observer
+    fun setObserver(colorObserver: IColorObserver){
+        mListener = colorObserver
     }
 
     override fun colorUpdate(hue: Float, saturation: Float, brightness: Float){
