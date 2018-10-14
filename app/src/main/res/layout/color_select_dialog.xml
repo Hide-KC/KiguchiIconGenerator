@@ -100,7 +100,7 @@
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.55" />
 
-        <com.development.kc.kiguchiicongenerator.SBPlane xmlns:custom="http://schemas.android.com/apk/res/com.development.kc.kiguchiicongenerator"
+        <com.development.kc.kiguchiicongenerator.colorpicker.SBPlane xmlns:custom="http://schemas.android.com/apk/res/com.development.kc.kiguchiicongenerator"
             android:id="@+id/sb_plane"
             android:layout_width="0dp"
             android:layout_height="0dp"
