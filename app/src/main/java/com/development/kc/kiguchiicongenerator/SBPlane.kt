@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 
 /**
@@ -18,7 +17,7 @@ class SBPlane: AbsHSBView{
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.SBPlane, 0, 0)
         try{
             //xmlで静的にセットされている値の取出し
-            setHue(typedArray.getFloat(R.styleable.SBPlane_sb_plane_hue, 0f))
+            setHue(typedArray.getFloat(R.styleable.SBPlane_sbplane_hue, 0f))
         } finally {
             typedArray.recycle()
         }

@@ -5,10 +5,7 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
-import com.development.kc.kiguchiicongenerator.colorpicker.AHSB
-import com.development.kc.kiguchiicongenerator.colorpicker.ColorChangeListener
-import com.development.kc.kiguchiicongenerator.colorpicker.IColorObserver
-import com.kc.twitterclientapp.R
+import com.development.kc.kiguchiicongenerator.R
 
 class SBPlane : HSBView, IColorObserver {
     constructor(context: Context) : this(context, null)
@@ -19,7 +16,7 @@ class SBPlane : HSBView, IColorObserver {
         try {
             //xmlで静的にセットされている値の取出し
             mAlpha = typedArray.getFloat(R.styleable.SBPlane_alpha, 0f)
-            hue = typedArray.getFloat(R.styleable.SBPlane_hue, 0f)
+            hue = typedArray.getFloat(R.styleable.SBPlane_sbplane_hue, 0f)
             saturation = typedArray.getFloat(R.styleable.SBPlane_saturation, 0f)
             brightness = typedArray.getFloat(R.styleable.SBPlane_brightness, 1f)
         } finally {
@@ -51,7 +48,7 @@ class SBPlane : HSBView, IColorObserver {
             val startColor = Color.HSVToColor(floatArrayOf(hue, x_i / 100f, 1f))
             val endColor = Color.HSVToColor(floatArrayOf(hue, x_i / 100f, 0f))
 
-            //ここでの座標系の数値入力は意味が無さそう
+            //ここでの座標系の数値入力は意味が無さそう?
             lg = LinearGradient(x_i*unit , 0f, x_i*unit , viewSize.height*1f, startColor, endColor, Shader.TileMode.CLAMP)
             paint.shader = lg
             canvas?.drawLine(x_i*unit, 0f, x_i*unit, viewSize.height*1f, paint)

@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener
         //resStr: ic_[Group]_[PartsID]_tint/line
         Toast.makeText(this, resStr, Toast.LENGTH_SHORT).show()
 
-        //TODO 不安定すぎる実装
+        //TODO リソース名をsplitはやめたい
         val arr = resStr.split('_')
         val group = IconLayout.GroupEnum.getTypeByValue(arr[1])
         val partsId = arr[2].toInt()
