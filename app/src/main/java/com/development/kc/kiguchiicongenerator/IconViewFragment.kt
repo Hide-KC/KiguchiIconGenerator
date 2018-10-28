@@ -12,7 +12,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 
 class IconViewFragment: Fragment() {
-    interface OnIconUpdateListener{
+    interface OnIconUpdatedListener{
         fun iconUpdate(group: IconLayout.GroupEnum, partsId: Int, tintColor: Int, lineColor: Int)
         fun partsSelected(group: IconLayout.GroupEnum, partsId: Int)
     }
@@ -60,6 +60,10 @@ class IconViewFragment: Fragment() {
 
     fun partsSelected(group: IconLayout.GroupEnum, partsId: Int){
         iconUpdate(group, partsId, icon.getColorFilter(group, IconLayout.BaseTypeEnum.TINT), icon.getColorFilter(group, IconLayout.BaseTypeEnum.LINE))
+    }
+
+    fun commentUpdate(comment: String?){
+        icon.setComment(comment)
     }
 
     companion object {

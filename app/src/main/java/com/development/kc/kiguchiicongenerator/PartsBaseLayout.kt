@@ -1,16 +1,15 @@
 package com.development.kc.kiguchiicongenerator
 
 import android.content.Context
-import android.graphics.Color
-import android.graphics.PorterDuff
+import android.graphics.*
 import android.os.Parcelable
-import android.support.constraint.ConstraintHelper
 import android.support.constraint.ConstraintLayout
 import android.support.constraint.ConstraintSet
-import android.support.constraint.Guideline
 import android.util.AttributeSet
 import android.view.View
 import android.widget.ImageView
+import kotlinx.android.synthetic.main.layer_base.view.*
+import kotlin.math.roundToInt
 
 class PartsBaseLayout: ConstraintLayout {
     lateinit var tag: IconLayout.GroupEnum
@@ -118,5 +117,25 @@ class PartsBaseLayout: ConstraintLayout {
         offsetY = 0f
     }
 
+    fun setComment(comment: String){
+        val paint = Paint()
+        val textSize = 20f
 
+        paint.isAntiAlias = true
+        paint.color = Color.BLACK
+        paint.textSize = textSize
+        val fontMetrics = paint.fontMetrics
+        paint.getTextBounds(comment, 0, comment.length, Rect(0,0,(textSize * comment.length).roundToInt(),textSize.toInt()))
+
+        val textWidth = paint.measureText(comment).roundToInt()
+        val textHeight = (Math.abs(fontMetrics.top) + fontMetrics.bottom).roundToInt()
+        val bitmap = Bitmap.createBitmap(textWidth, textHeight,Bitmap.Config.ARGB_8888)
+
+        val canvas = Canvas(bitmap)
+        canvas.drawText(comment, 0f, Math.abs(fontMetrics.top), paint)
+
+        base_tint.setImageBitmap(bitmap)
+
+
+    }
 }

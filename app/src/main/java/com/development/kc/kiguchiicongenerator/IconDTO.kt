@@ -46,6 +46,8 @@ class IconDTO(private val tag: String?): Serializable{
         }
     }
 
+    private var comment: String? = null
+
     private var backGroundResId: Int? = null
 
     fun setPartsId(group: IconLayout.GroupEnum, partsId: Int){
@@ -84,5 +86,9 @@ class IconDTO(private val tag: String?): Serializable{
 
     fun setBackground(resId: Int){
 
+    }
+
+    fun setComment(comment: String?){
+        this.comment = comment
     }
 }

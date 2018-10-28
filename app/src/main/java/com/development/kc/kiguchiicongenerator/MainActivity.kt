@@ -19,7 +19,7 @@ import com.google.android.gms.ads.MobileAds
 import android.preference.PreferenceManager
 
 
-class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener, ControllerFragment.OnKeyClickedListener, IconViewFragment.OnIconUpdateListener {
+class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener, ControllerFragment.OnKeyClickedListener, IconViewFragment.OnIconUpdatedListener, CommentFragment.ICommentUpdate {
     private val FRAGMENT_STATE = "fragment_state"
     private var swapFragmentState = FragmentTag.PARTS_GRID
 
@@ -38,6 +38,13 @@ class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener
                 val group = IconLayout.GroupEnum.values()[ordinal]
                 iconUpdate(group, partsId, colors[0], colors[1])
             }
+        }
+    }
+
+    override fun commentUpdate(comment: String?) {
+        val fragment = supportFragmentManager.findFragmentByTag(FragmentTag.ICON_VIEW.name)
+        if (fragment is IconViewFragment){
+            fragment.commentUpdate(comment)
         }
     }
 

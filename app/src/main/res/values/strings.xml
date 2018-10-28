@@ -37,5 +37,8 @@
 
     <string name="test_comment">ずいずいずいずいずいずい\nずいずいずいずいずいずい</string>
 
+    <!--コメントレイヤ-->
+    <string name="comment_hint">コメントを入力</string>
+    <string name="clear">クリア</string>
 
 </resources>

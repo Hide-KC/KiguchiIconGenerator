@@ -119,4 +119,10 @@ class IconLayout: FrameLayout{
             }
         }
     }
+
+    //CommentLayerのみに適合
+    fun setComment(comment: String){
+        val layer = getLayer(GroupEnum.COMMENT)
+        layer?.setComment(comment)
+    }
 }
