@@ -1,6 +1,6 @@
 package com.development.kc.kiguchiicongenerator.colorpicker
 
-data class AHSB(val mAlpha: Float = 0f,
-                val hue: Float = 0f,
-                val saturation: Float = 0f,
-                val brightness: Float = 1f)
+data class AHSB(var mAlpha: Int = 255,
+                var hue: Float = 0f,
+                var saturation: Float = 0f,
+                var brightness: Float = 1f)

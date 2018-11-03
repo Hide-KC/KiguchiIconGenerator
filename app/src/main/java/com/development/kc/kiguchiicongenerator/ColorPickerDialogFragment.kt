@@ -6,18 +6,21 @@ import android.app.Dialog
 import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.util.Log
+import com.development.kc.kiguchiicongenerator.colorpicker.*
+import kotlin.math.roundToInt
 
-class ColorPickerDialogFragment: DialogFragment() {
+class ColorPickerDialogFragment: DialogFragment(){
     override fun onDestroy() {
         super.onDestroy()
-        mColorChangeSubject.detachAll()
+        colorSubject.detachAll()
     }
 
-    private val mColorChangeSubject: Subject = ColorChangeSubject()
+    private val colorSubject = ColorSubject()
     private var group: IconLayout.GroupEnum = IconLayout.GroupEnum.BACK_HAIR
     private var targetColorArea: IconLayout.BaseTypeEnum = IconLayout.BaseTypeEnum.TINT
     private val changed = intArrayOf(0,0)
@@ -58,6 +61,7 @@ class ColorPickerDialogFragment: DialogFragment() {
                     iconLayout.setColorFilter(group, type, icon.getColorFilter(group, type))
                 }
             }
+//            colorSubject.attach(iconLayout)
 
 
             //TODO セリフの設定
@@ -70,31 +74,31 @@ class ColorPickerDialogFragment: DialogFragment() {
             lineColorImage.setOnClickListener{ targetColorArea = IconLayout.BaseTypeEnum.LINE }
 
             if (tintColorImage is IColorObserver){
-                tintColorImage.setObserver(object: IColorObserver{
-                    override fun colorUpdate(hue: Float, saturation: Float, brightness: Float) {
+                tintColorImage.setObserver(object: IColorObserver {
+                    override fun colorUpdate(ahsb: AHSB) {
                         if (targetColorArea == IconLayout.BaseTypeEnum.TINT){
-                            tintColorImage.setColorFilter(Color.HSVToColor(floatArrayOf(hue,saturation,brightness)))
+                            tintColorImage.setColorFilter(hsvToColor(ahsb))
                         }
                     }
                 })
-                mColorChangeSubject.attach(tintColorImage as IColorObserver)
+                colorSubject.attach(tintColorImage)
             }
 
             if (lineColorImage is IColorObserver){
-                lineColorImage.setObserver(object: IColorObserver{
-                    override fun colorUpdate(hue: Float, saturation: Float, brightness: Float) {
+                lineColorImage.setObserver(object: IColorObserver {
+                    override fun colorUpdate(ahsb: AHSB) {
                         if (targetColorArea == IconLayout.BaseTypeEnum.LINE){
-                            lineColorImage.setColorFilter(Color.HSVToColor(floatArrayOf(hue,saturation,brightness)))
+                            lineColorImage.setColorFilter(hsvToColor(ahsb))
                         }
                     }
                 })
-                mColorChangeSubject.attach(lineColorImage as IColorObserver)
+                colorSubject.attach(lineColorImage)
             }
 
-            val sbPlane = view.findViewById<AbsHSBView>(R.id.sb_plane)
-            sbPlane?.setOnHSBChangeListener(object: AbsHSBView.OnHSBChangedListener{
-                override fun onHSBChanged(hue: Float, saturation: Float, brightness: Float) {
-                    val color = Color.HSVToColor(floatArrayOf(hue, saturation, brightness))
+            val sbPlane = view.findViewById<HSBView>(R.id.sb_plane)
+            sbPlane.setOnAHSBChangeListener(object: HSBView.OnAHSBChangedListener {
+                override fun onAHSBChanged(ahsb: AHSB) {
+                    val color = hsvToColor(ahsb)
                     //targetColorArea, パーツのImageViewにもIObserverを実装する（カスタムビュー化）
                     //→HueBarやSBPlaneなど、notify()を叩いたら全てに反映される。
 
@@ -103,60 +107,55 @@ class ColorPickerDialogFragment: DialogFragment() {
                         IconLayout.BaseTypeEnum.TINT -> changed[0] = color
                         IconLayout.BaseTypeEnum.LINE -> changed[1] = color
                     }
-                    mColorChangeSubject.notifyColorChange(hue, saturation, brightness)
+                    colorSubject.notify(ahsb)
                 }
             })
-
-            val hueBar = view.findViewById<AbsHSBView>(R.id.hue_bar)
-            hueBar?.setOnHSBChangeListener(object: AbsHSBView.OnHSBChangedListener{
-                override fun onHSBChanged(hue: Float, saturation: Float, brightness: Float) {
-                    mColorChangeSubject.notifyColorChange(hue, saturation, brightness)
-                }
-            })
-
             if (sbPlane is IColorObserver){
-                mColorChangeSubject.attach(sbPlane)
+                colorSubject.attach(sbPlane)
             }
 
+            val hueBar = view.findViewById<HSBView>(R.id.hue_bar)
+            hueBar.setOnAHSBChangeListener(object: HSBView.OnAHSBChangedListener{
+                override fun onAHSBChanged(ahsb: AHSB) {
+                    colorSubject.notify(ahsb)
+                }
+            })
             if (hueBar is IColorObserver){
-                mColorChangeSubject.attach(hueBar)
+                colorSubject.attach(hueBar)
             }
 
             val redValue = view.findViewById<ObservableTextView>(R.id.red_value)
             val greenValue = view.findViewById<ObservableTextView>(R.id.green_value)
             val blueValue = view.findViewById<ObservableTextView>(R.id.blue_value)
             val code = view.findViewById<ObservableTextView>(R.id.code)
-            redValue.setObserver(object: IColorObserver{
-                override fun colorUpdate(hue: Float, saturation: Float, brightness: Float) {
-                    val color = Color.HSVToColor(floatArrayOf(hue, saturation, brightness))
+            redValue.setObserver(object: IColorObserver {
+                override fun colorUpdate(ahsb: AHSB) {
+                    val color = hsvToColor(ahsb)
                     redValue.text = Color.red(color).toString()
                 }
             })
-            greenValue.setObserver(object: IColorObserver{
-                override fun colorUpdate(hue: Float, saturation: Float, brightness: Float) {
-                    val color = Color.HSVToColor(floatArrayOf(hue, saturation, brightness))
+            greenValue.setObserver(object: IColorObserver {
+                override fun colorUpdate(ahsb: AHSB) {
+                    val color = hsvToColor(ahsb)
                     greenValue.text = Color.green(color).toString()
                 }
             })
-            blueValue.setObserver(object: IColorObserver{
-                override fun colorUpdate(hue: Float, saturation: Float, brightness: Float) {
-                    val color = Color.HSVToColor(floatArrayOf(hue, saturation, brightness))
+            blueValue.setObserver(object: IColorObserver {
+                override fun colorUpdate(ahsb: AHSB) {
+                    val color = hsvToColor(ahsb)
                     blueValue.text = Color.blue(color).toString()
                 }
             })
-            code.setObserver(object: IColorObserver{
-                override fun colorUpdate(hue: Float, saturation: Float, brightness: Float) {
-                    val color = Color.HSVToColor(floatArrayOf(hue, saturation, brightness))
+            code.setObserver(object: IColorObserver {
+                override fun colorUpdate(ahsb: AHSB) {
+                    val color = hsvToColor(ahsb)
                     code.text = Integer.toHexString(color)
                 }
             })
-            mColorChangeSubject.attach(redValue)
-            mColorChangeSubject.attach(greenValue)
-            mColorChangeSubject.attach(blueValue)
-            mColorChangeSubject.attach(code)
-
-
-
+            colorSubject.attach(redValue)
+            colorSubject.attach(greenValue)
+            colorSubject.attach(blueValue)
+            colorSubject.attach(code)
         }
 
         val builder = AlertDialog.Builder(activity)
@@ -179,6 +178,10 @@ class ColorPickerDialogFragment: DialogFragment() {
 
     }
 
+    fun changed(ahsb: AHSB){
+        colorSubject.notify(ahsb)
+    }
+
     companion object {
         fun newInstance(targetFragment: Fragment?, group: IconLayout.GroupEnum): ColorPickerDialogFragment{
             val args = Bundle()
@@ -187,6 +190,10 @@ class ColorPickerDialogFragment: DialogFragment() {
             fragment.arguments = args
             fragment.setTargetFragment(targetFragment, 100)
             return fragment
+        }
+
+        fun hsvToColor(ahsb: AHSB): Int{
+            return Color.HSVToColor(ahsb.mAlpha, floatArrayOf(ahsb.hue, ahsb.saturation, ahsb.brightness))
         }
     }
 }

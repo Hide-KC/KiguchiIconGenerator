@@ -1,52 +1,112 @@
 package com.development.kc.kiguchiicongenerator.colorpicker
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.*
 import android.util.AttributeSet
-import android.widget.SeekBar
-import com.development.kc.kiguchiicongenerator.colorpicker.AHSB
-import com.development.kc.kiguchiicongenerator.colorpicker.ColorChangeListener
-import com.development.kc.kiguchiicongenerator.colorpicker.IColorObserver
+import android.view.MotionEvent
+import com.development.kc.kiguchiicongenerator.R
 
-class HueBar(context: Context, attrs: AttributeSet) : SeekBar(context, attrs), IColorObserver {
-    var mAlpha: Float = 0f
-        set(value){ field = value.coerceIn(0f..1f) }
+class HueBar : HSBView, IColorObserver {
+    constructor(context: Context): this(context, null)
+    constructor(context: Context, attrs: AttributeSet?): this(context, attrs, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int): super(context, attrs, defStyleAttr){
+        //識別子のセット
+        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.HueBar, defStyleAttr, 0)
+        try{
+            //xmlで静的にセットされている値の取出し
+            hue = typedArray.getFloat(R.styleable.HueBar_hue, 0f)
+            strokeSize = typedArray.getDimension(R.styleable.HueBar_stroke_size, 2 * context.resources.displayMetrics.density)
+            pick = typedArray.getFloat(R.styleable.HueBar_pick, 0f)
+        } finally {
+            typedArray.recycle()
+        }
+    }
 
-    var hue: Float = 0f
-        set(value){
-            var degree = value
-            if (degree > 360 || degree < 0){
-                //360度以内に格納
-                degree %= 360
-                degree += 360
-                degree %= 360
+    private val rainbowArray: IntArray = intArrayOf(
+            Color.parseColor("#ffff0000"),
+            Color.parseColor("#ffffff00"),
+            Color.parseColor("#ff00ff00"),
+            Color.parseColor("#ff00ffff"),
+            Color.parseColor("#ff0000ff"),
+            Color.parseColor("#ffff00ff"),
+            Color.parseColor("#ffff0000")
+    )
+
+    private var strokeSize: Float
+    private var pick: Float
+    private var verticalGridSize: Float = 0f
+    private var rainbowBaseLine: Float = 0f
+    private var showPreview = false
+
+    private val rainbowBackgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.WHITE
+        style = Paint.Style.STROKE
+        strokeCap = Paint.Cap.ROUND
+    }
+    private val rainbowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeCap = Paint.Cap.ROUND
+    }
+
+    private val pickPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+    override fun onDraw(canvas: Canvas) {
+        drawPicker(canvas)
+        drawColorAim(canvas, rainbowBaseLine,verticalGridSize.toInt() / 2, verticalGridSize * 0.5f, Color.HSVToColor(floatArrayOf(hue, 1f, 1f)))
+        if (showPreview){
+            drawColorAim(canvas, verticalGridSize, (verticalGridSize / 1.4f).toInt(), verticalGridSize * 0.7f, Color.HSVToColor(floatArrayOf(hue, 1f, 1f)))
+        }
+    }
+
+    private fun drawPicker(canvas: Canvas){
+        val lineX = verticalGridSize / 2f
+        val lineY = rainbowBaseLine
+        rainbowPaint.strokeWidth = verticalGridSize / 1.5f + strokeSize
+        rainbowBackgroundPaint.strokeWidth = rainbowPaint.strokeWidth + strokeSize
+        canvas.drawLine(lineX, lineY, width - lineX, lineY, rainbowBackgroundPaint)
+        canvas.drawLine(lineX, lineY, width - lineX, lineY, rainbowPaint)
+    }
+
+    private fun drawColorAim(canvas: Canvas, baseLine: Float, offset: Int, size: Float, color: Int){
+        val circleCenterX = offset + pick * (canvas.width - offset * 2)
+        canvas.drawCircle(circleCenterX, baseLine, size, pickPaint.apply { this.color = Color.WHITE })
+        canvas.drawCircle(circleCenterX, baseLine, size - strokeSize, pickPaint.apply { this.color = color })
+    }
+
+    @SuppressLint("DrawAllocation")
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        val shader = LinearGradient(measuredHeight / 4f, measuredHeight / 2f, measuredWidth - measuredHeight / 4f, measuredHeight / 2f, rainbowArray, null, Shader.TileMode.CLAMP)
+        verticalGridSize = measuredHeight / 3f
+        rainbowPaint.shader = shader
+        rainbowBaseLine = verticalGridSize / 2f + verticalGridSize * 2
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        val action = event?.action
+        if (event != null && (action == MotionEvent.ACTION_MOVE || action == MotionEvent.ACTION_DOWN)){
+            pick = event.x / measuredWidth.toFloat()
+            if (pick < 0) {
+                pick = 0f
+            } else if (pick > 1) {
+                pick = 1f
             }
-            field = degree
+            hue = pick * 360
+            showPreview = true
+        } else if (action == MotionEvent.ACTION_UP){
+            showPreview = false
         }
-
-    var saturation: Float = 0f
-        set(value){ field = value.coerceIn(0f..1f) }
-
-    var brightness: Float = 1f
-        set(value){ field = value.coerceIn(0f..1f) }
-
-    fun progressChanged(){
-        val ahsb = AHSB(mAlpha, hue, saturation, brightness)
-        if (context is ColorChangeListener){
-            val listener = context as ColorChangeListener
-            listener.changed(ahsb)
-        }
+        mListener?.onAHSBChanged(getAHSB())
+        return true
     }
 
     override fun colorUpdate(ahsb: AHSB) {
-        mAlpha = ahsb.mAlpha
-        progress = ahsb.hue.toInt()
-        hue = ahsb.hue
-        saturation = ahsb.saturation
-        brightness = ahsb.brightness
+        setAHSB(ahsb)
         postInvalidateOnAnimation()
     }
 
-    fun getProgressAsFloat(): Float {
-        return super.getProgress() * 1f
+    private fun hsvToColor(ahsb: AHSB): Int{
+        return Color.HSVToColor(ahsb.mAlpha, floatArrayOf(ahsb.hue, ahsb.saturation, ahsb.brightness))
     }
 }

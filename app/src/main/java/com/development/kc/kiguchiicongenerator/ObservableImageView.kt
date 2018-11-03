@@ -3,6 +3,8 @@ package com.development.kc.kiguchiicongenerator
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.ImageView
+import com.development.kc.kiguchiicongenerator.colorpicker.AHSB
+import com.development.kc.kiguchiicongenerator.colorpicker.IColorObserver
 
 //IObserver持たせたかっただけ
 class ObservableImageView: ImageView, IColorObserver{
@@ -17,7 +19,7 @@ class ObservableImageView: ImageView, IColorObserver{
         mListener = colorObserver
     }
 
-    override fun colorUpdate(hue: Float, saturation: Float, brightness: Float){
-        mListener?.colorUpdate(hue, saturation, brightness)
+    override fun colorUpdate(ahsb: AHSB){
+        mListener?.colorUpdate(ahsb)
     }
 }

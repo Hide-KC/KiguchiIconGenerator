@@ -15,7 +15,6 @@ class SBPlane : HSBView, IColorObserver {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.SBPlane, 0, 0)
         try {
             //xmlで静的にセットされている値の取出し
-            mAlpha = typedArray.getFloat(R.styleable.SBPlane_alpha, 0f)
             hue = typedArray.getFloat(R.styleable.SBPlane_sbplane_hue, 0f)
             saturation = typedArray.getFloat(R.styleable.SBPlane_saturation, 0f)
             brightness = typedArray.getFloat(R.styleable.SBPlane_brightness, 1f)
@@ -67,12 +66,7 @@ class SBPlane : HSBView, IColorObserver {
                 else -> 1 - y
             }
         }
-
-        if (context is ColorChangeListener){
-            val listener = context as ColorChangeListener
-            listener.changed(AHSB(mAlpha, hue, saturation, brightness))
-        }
-
+        mListener?.onAHSBChanged(getAHSB())
         return true
     }
 

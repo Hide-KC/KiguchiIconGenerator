@@ -1,6 +1,10 @@
 package com.development.kc.kiguchiicongenerator.colorpicker
 
 abstract class Subject<T, E> {
+    enum class States {
+        WAIT, RUNNING, ERROR
+    }
+
     protected val observers = mutableListOf<T>()
     abstract fun notify(parameter: E)
 
@@ -24,9 +28,6 @@ abstract class Subject<T, E> {
     }
 
     private var state: States = States.WAIT
-    enum class States{
-        WAIT, RUNNING, ERROR
-    }
 
     protected fun getState(): States {
         return state

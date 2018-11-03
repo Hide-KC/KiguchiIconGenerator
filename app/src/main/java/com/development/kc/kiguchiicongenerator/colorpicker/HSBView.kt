@@ -9,12 +9,29 @@ abstract class HSBView : View {
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-    var mAlpha: Float = 0f
+    interface OnAHSBChangedListener {
+        fun onAHSBChanged(ahsb: AHSB)
+    }
+
+    var mListener: OnAHSBChangedListener? = null
+    fun setOnAHSBChangeListener(listener: OnAHSBChangedListener){
+        this.mListener = mListener?: listener
+    }
+
+    private val ahsb = AHSB()
+
+    var mAlpha: Int
+        get(){
+            return ahsb.mAlpha
+        }
         set(value){
-            field = value.coerceIn(0f..1f)
+            ahsb.mAlpha = value.coerceIn(0..255)
         }
 
-    var hue: Float = 0f
+    var hue: Float
+        get(){
+            return ahsb.hue
+        }
         set(value){
             var degree = value
             if (degree > 360 || degree < 0){
@@ -23,16 +40,37 @@ abstract class HSBView : View {
                 degree += 360
                 degree %= 360
             }
-            field = degree
+            ahsb.hue = degree
         }
 
-    var saturation: Float = 0f
+    var saturation: Float
+        get(){
+            return ahsb.saturation
+        }
         set(value){
-            field = value.coerceIn(0f..1f)
+            ahsb.saturation = value.coerceIn(0f..1f)
         }
 
-    var brightness: Float = 1f
-        set(value){
-            field = value.coerceIn(0f..1f)
+    var brightness: Float
+        get(){
+            return ahsb.brightness
         }
+        set(value){
+            ahsb.brightness = value.coerceIn(0f..1f)
+        }
+
+    fun getAHSB(): AHSB{
+        return ahsb
+    }
+
+    fun copyAHSB(): AHSB{
+        return ahsb.copy(mAlpha = ahsb.mAlpha, hue = ahsb.hue, saturation = ahsb.saturation, brightness = ahsb.brightness)
+    }
+
+    fun setAHSB(ahsb: AHSB){
+        this.ahsb.mAlpha = ahsb.mAlpha
+        this.ahsb.hue = ahsb.hue
+        this.ahsb.saturation = ahsb.saturation
+        this.ahsb.brightness = ahsb.brightness
+    }
 }
