@@ -6,13 +6,11 @@ import android.app.Dialog
 import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.util.Log
-import com.development.kc.kiguchiicongenerator.colorpicker.*
-import kotlin.math.roundToInt
+import com.development.kc.colorpicker.*
 
 class ColorPickerDialogFragment: DialogFragment(){
     override fun onDestroy() {

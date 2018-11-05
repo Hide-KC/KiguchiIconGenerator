@@ -100,7 +100,7 @@
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.55" />
 
-        <com.development.kc.kiguchiicongenerator.colorpicker.SBPlane xmlns:custom="http://schemas.android.com/apk/res/com.development.kc.kiguchiicongenerator"
+        <com.development.kc.colorpicker.SBPlane xmlns:custom="http://schemas.android.com/apk/res/com.development.kc.kiguchiicongenerator"
             android:id="@+id/sb_plane"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -114,7 +114,7 @@
             custom:sbplane_hue="0" />
 
         <!--maxがSVPlaneViewと密結合になってしまうためカスタムレイアウトに取り込む-->
-        <com.development.kc.kiguchiicongenerator.colorpicker.HueBar xmlns:custom="http://schemas.android.com/apk/res/com.development.kc.kiguchiicongenerator"
+        <com.development.kc.colorpicker.HueBar xmlns:custom="http://schemas.android.com/apk/res/com.development.kc.kiguchiicongenerator"
             android:id="@+id/hue_bar"
             style="@style/HueBar"
             android:layout_width="0dp"
@@ -168,7 +168,7 @@
             app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.development.kc.kiguchiicongenerator.colorpicker.ObservableTextView
+        <com.development.kc.colorpicker.ObservableTextView
             android:id="@+id/red_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -178,7 +178,7 @@
             app:layout_constraintStart_toEndOf="@+id/barrier2"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.development.kc.kiguchiicongenerator.colorpicker.ObservableTextView
+        <com.development.kc.colorpicker.ObservableTextView
             android:id="@+id/green_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -188,7 +188,7 @@
             app:layout_constraintStart_toEndOf="@+id/barrier2"
             app:layout_constraintTop_toBottomOf="@+id/red_value" />
 
-        <com.development.kc.kiguchiicongenerator.colorpicker.ObservableTextView
+        <com.development.kc.colorpicker.ObservableTextView
             android:id="@+id/blue_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -198,7 +198,7 @@
             app:layout_constraintStart_toEndOf="@+id/barrier2"
             app:layout_constraintTop_toBottomOf="@+id/green_value" />
 
-        <com.development.kc.kiguchiicongenerator.colorpicker.ObservableTextView
+        <com.development.kc.colorpicker.ObservableTextView
             android:id="@+id/code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

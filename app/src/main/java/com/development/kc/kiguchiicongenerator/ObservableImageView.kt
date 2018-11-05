@@ -3,8 +3,7 @@ package com.development.kc.kiguchiicongenerator
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.ImageView
-import com.development.kc.kiguchiicongenerator.colorpicker.AHSB
-import com.development.kc.kiguchiicongenerator.colorpicker.IColorObserver
+import com.development.kc.colorpicker.*
 
 //IObserver持たせたかっただけ
 class ObservableImageView: ImageView, IColorObserver{

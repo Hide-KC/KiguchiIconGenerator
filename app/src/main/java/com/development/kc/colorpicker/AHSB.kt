@@ -1,4 +1,4 @@
-package com.development.kc.kiguchiicongenerator.colorpicker
+package com.development.kc.colorpicker
 
 data class AHSB(var mAlpha: Int = 255,
                 var hue: Float = 0f,

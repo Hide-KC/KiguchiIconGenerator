@@ -1,4 +1,4 @@
-package com.development.kc.kiguchiicongenerator.colorpicker
+package com.development.kc.colorpicker
 
 abstract class Subject<T, E> {
     enum class States {

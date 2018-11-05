@@ -1,4 +1,4 @@
-package com.development.kc.kiguchiicongenerator.colorpicker
+package com.development.kc.colorpicker
 
 import android.annotation.SuppressLint
 import android.content.Context

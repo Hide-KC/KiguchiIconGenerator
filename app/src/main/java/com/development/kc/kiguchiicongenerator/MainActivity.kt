@@ -17,8 +17,7 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import android.preference.PreferenceManager
-import com.development.kc.kiguchiicongenerator.colorpicker.AHSB
-import com.development.kc.kiguchiicongenerator.colorpicker.ColorChangeListener
+import com.development.kc.colorpicker.*
 
 
 class MainActivity : AppCompatActivity(), PartsGridFragment.OnPartsClickListener, ControllerFragment.OnKeyClickedListener, IconViewFragment.OnIconUpdatedListener, CommentFragment.ICommentUpdate, ColorChangeListener {

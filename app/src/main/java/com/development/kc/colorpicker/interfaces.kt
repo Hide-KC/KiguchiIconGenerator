@@ -1,4 +1,4 @@
-package com.development.kc.kiguchiicongenerator.colorpicker
+package com.development.kc.colorpicker
 
 interface IColorObserver{
     //Subject#notifyからの受信用
